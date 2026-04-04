@@ -1,24 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { COLORS } from '../../constants/colors';
+import { View, Text, Button } from 'react-native';
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Login Screen — Sprint 2</Text>
+    <View>
+      <Text>Login Screen</Text>
+      <Button
+        title="Go to Home"
+        onPress={() => navigation.navigate('Home')}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.background,
-  },
-  text: {
-    color: COLORS.primary,
-    fontSize: 18,
-  },
-});
