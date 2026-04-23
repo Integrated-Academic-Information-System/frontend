@@ -5,35 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6cb149eb-70a3-4256-a349-7f841791b8fd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/adaptive-icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/favicon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/splash-icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/babel.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/teacher/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/axiosInstance.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/teacher/classes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/teacher/marks-entry.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/teacher/students.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/colors.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/roles.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/navigation/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/teacher/subjects.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/navigation/AppNavigator.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/admin/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/LoginScreen.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/student/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/teacher/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +74,7 @@
       <updated>1776909310034</updated>
       <workItem from="1776909311399" duration="1871000" />
       <workItem from="1776912875852" duration="677000" />
-      <workItem from="1776951378929" duration="2273000" />
+      <workItem from="1776951378929" duration="3034000" />
     </task>
     <servers />
   </component>
