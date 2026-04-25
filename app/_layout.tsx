@@ -7,7 +7,7 @@ export default function RootLayout() {
         <SafeAreaProvider>
             <Stack
                 screenOptions={{
-                    headerShown: false, // 🔥 disable for ALL screens
+                    headerShown: false, // disable for ALL screens
                 }}
             >
                 <Stack.Screen name="(tabs)" />
