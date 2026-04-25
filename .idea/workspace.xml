@@ -5,69 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6cb149eb-70a3-4256-a349-7f841791b8fd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.vscode/extensions.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/student/others.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/teacher/_layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/teacher/classes.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/teacher/marks-entry.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/teacher/students.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/teacher/subjects.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/global.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/login.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/android-icon-background.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/android-icon-foreground.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/android-icon-monochrome.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/favicon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/partial-react-logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/react-logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/react-logo@2x.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/react-logo@3x.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/eslint.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/metro.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nativewind-env.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/adaptive-icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/favicon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/splash-icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/splash-icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/login.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/babel.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/metro.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/admin/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/axiosInstance.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/admin/alerts.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/admin/dashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/admin/students.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/colors.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/roles.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/navigation/AppNavigator.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/navigation/AppNavigator.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/admin/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/admin/subjects.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/LoginScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/student/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/student/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/teacher/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/student/latest-results.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/student/marks.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/student/notifications.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/Vihanga/Downloads/React Native/frontend" value="3CjqPZdbkVAyGrcmY8EdVHuLdvk" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedChatMode">
+    <option name="chatModeId" value="Agent" />
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="agent-panel" value="Auto" />
+      <entry key="chat-panel" value="Auto" />
+    </selectedModels>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -91,7 +58,7 @@
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Merging Development&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Development&quot;,
     &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Vihanga/Downloads/React Native/frontend/app/(tabs)/teacher&quot;,
@@ -132,7 +99,8 @@
       <workItem from="1776909311399" duration="1871000" />
       <workItem from="1776912875852" duration="677000" />
       <workItem from="1776951378929" duration="4837000" />
-      <workItem from="1777089192071" duration="320000" />
+      <workItem from="1777089192071" duration="6490000" />
+      <workItem from="1777106428277" duration="2360000" />
     </task>
     <servers />
   </component>
@@ -150,7 +118,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="origin/main" />
                       </list>
                     </value>
                   </entry>
@@ -161,5 +129,13 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>
