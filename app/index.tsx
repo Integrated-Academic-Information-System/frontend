@@ -13,6 +13,7 @@ import {
   Text,
   TextInput,
   View,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -51,11 +52,11 @@ export default function Index() {
             <View className="w-full max-w-[340px] flex-1 rounded-[34px] bg-white px-5 py-6 shadow-2xl shadow-black/10">
               <View className="items-center pt-2">
                 <View className="w-full flex-row items-start gap-3">
-                  <View className="h-11 w-11 items-center justify-center rounded-full bg-[#8f140e]">
-                    <MaterialCommunityIcons
-                      name="school"
-                      size={22}
-                      color="#fff"
+                  <View className="h-11 w-11 rounded-full overflow-hidden">
+                    <Image
+                      source={require("../assets/images/school-logo.png")}
+                      className="h-full w-full"
+                      resizeMode="cover"
                     />
                   </View>
                   <Text className="mt-1 flex-1 text-[16px] font-bold leading-5 text-[#8f140e]">
