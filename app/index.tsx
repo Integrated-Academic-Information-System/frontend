@@ -26,7 +26,7 @@ export default function Index() {
   const handleClearForm = () => {
     setUsername("");
     setPassword("");
-    setRememberMe(true);
+    setRememberMe(false);
     setShowPassword(false);
     setLanguage("English");
   };
@@ -170,14 +170,26 @@ export default function Index() {
 
                 <Pressable
                   onPress={handleClearForm}
-                  className="h-14 items-center justify-center rounded-full bg-[#e7e4e0]"
+                  className="h-14 items-center justify-center rounded-full"
+                  style={({ pressed }) => ({
+                    backgroundColor: pressed ? "#8f140e" : "#e7e4e0",
+                  })}
                 >
-                  <View className="flex-row items-center gap-2">
-                    <Feather name="refresh-ccw" size={17} color="#2d2d2d" />
-                    <Text className="text-[16px] font-medium tracking-[0.4px] text-[#2d2d2d]">
-                      CLEAR FORM
-                    </Text>
-                  </View>
+                  {({ pressed }) => (
+                    <View className="flex-row items-center gap-2">
+                      <Feather
+                        name="refresh-ccw"
+                        size={17}
+                        color={pressed ? "#fff" : "#2d2d2d"}
+                      />
+                      <Text
+                        className="text-[16px] font-medium tracking-[0.4px]"
+                        style={{ color: pressed ? "#fff" : "#2d2d2d" }}
+                      >
+                        CLEAR FORM
+                      </Text>
+                    </View>
+                  )}
                 </Pressable>
               </View>
 
