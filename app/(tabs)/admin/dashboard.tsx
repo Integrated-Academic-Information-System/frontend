@@ -9,6 +9,7 @@ import {
   ImageBackground
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router"; // [NEW] Import router
 
 export default function AdminDashboard() {
   return (
@@ -17,7 +18,7 @@ export default function AdminDashboard() {
       
       <ScrollView 
         className="flex-1" 
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: 140 }}
         showsVerticalScrollIndicator={false}
       >
         <View className="px-6 pt-4">
@@ -43,7 +44,7 @@ export default function AdminDashboard() {
             </Text>
           </View>
 
-          {/* Stats Section - Vertical Stacked White Cards */}
+          {/* Stats Section */}
           <View className="mt-8 gap-4">
             <View className="flex-row items-center justify-between rounded-[28px] bg-white p-6 shadow-sm shadow-black/5">
               <View className="h-12 w-12 items-center justify-center rounded-2xl bg-[#fff5f5]">
@@ -66,23 +67,25 @@ export default function AdminDashboard() {
             </View>
           </View>
 
-          {/* Action Buttons */}
+          {/* Action Buttons with Routing */}
           <View className="mt-8 gap-3">
             <View className="flex-row gap-3">
-              <Pressable className="h-14 flex-1 items-center justify-center rounded-full bg-[#8f140e]">
+              <Pressable 
+                onPress={() => router.push("/students")} // Navigate to Students
+                className="h-14 flex-1 items-center justify-center rounded-full bg-[#8f140e] active:opacity-80"
+              >
                 <Text className="text-[15px] font-bold text-white">View Students</Text>
               </Pressable>
-              <Pressable className="h-14 flex-1 items-center justify-center rounded-full bg-[#e7e5e2]">
+              <Pressable 
+                onPress={() => router.push("/marks")} 
+                className="h-14 flex-1 items-center justify-center rounded-full bg-[#e7e5e2] active:opacity-70"
+              >
                 <Text className="text-[15px] font-bold text-[#2d2d2d]">Enter Marks</Text>
               </Pressable>
             </View>
             
-            <Pressable className="h-14 items-center justify-center rounded-full bg-[#e7e5e2]">
+            <Pressable className="h-14 items-center justify-center rounded-full bg-[#e7e5e2] active:opacity-70">
               <Text className="text-[15px] font-bold text-[#2d2d2d]">User Management</Text>
-            </Pressable>
-            
-            <Pressable className="h-14 items-center justify-center rounded-full bg-[#e7e5e2]">
-              <Text className="text-[15px] font-bold text-[#2d2d2d]">Manage Subjects</Text>
             </Pressable>
           </View>
 
@@ -90,23 +93,16 @@ export default function AdminDashboard() {
           <View className="mt-10 rounded-[32px] bg-[#f2f0ed] p-6">
             <Text className="text-[11px] font-bold tracking-[1.5px] text-[#8f140e]">SYSTEM STATUS</Text>
             <Text className="mt-1 text-[26px] font-bold text-[#212121]">Recent Alerts</Text>
-            <Text className="mt-3 text-[14px] leading-5 text-[#6d615c]">
-              Three departments have pending grade submissions for the final semester. System health remains at 98.4% uptime.
-            </Text>
             
             <View className="mt-6 gap-3">
               <View className="flex-row items-center gap-3 rounded-2xl bg-white p-4">
                 <View className="h-2 w-2 rounded-full bg-[#8f140e]" />
                 <Text className="text-[13px] font-medium text-[#433735]">Physics Lab: Missing marks for 12 students</Text>
               </View>
-              <View className="flex-row items-center gap-3 rounded-2xl bg-white p-4">
-                <View className="h-2 w-2 rounded-full bg-[#f59e0b]" />
-                <Text className="text-[13px] font-medium text-[#433735]">Server update scheduled for 11:00 PM</Text>
-              </View>
             </View>
           </View>
 
-          {/* Master Plan Card */}
+          {/* Master Plan Card (from image_9a1a57.png) */}
           <View className="mt-8 overflow-hidden rounded-[32px] bg-[#8f140e]">
             <ImageBackground 
               source={{ uri: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&q=80&w=1000' }} 
@@ -114,8 +110,8 @@ export default function AdminDashboard() {
               imageStyle={{ opacity: 0.6 }}
             >
               <Text className="text-[24px] font-bold text-white">Master Plan Update 2024</Text>
-              <Text className="mt-2 text-[14px] text-white/80">Review the latest structural changes to the core curriculum.</Text>
-              <Pressable className="mt-4 w-32 rounded-full bg-white/20 px-4 py-2 border border-white/30 backdrop-blur-md">
+              <Text className="mt-2 text-[14px] text-white/80">Review structural changes.</Text>
+              <Pressable className="mt-4 w-32 rounded-full bg-white/20 px-4 py-2 border border-white/30">
                 <Text className="text-center text-[12px] font-bold text-white">VIEW REPORT</Text>
               </Pressable>
             </ImageBackground>
@@ -124,24 +120,41 @@ export default function AdminDashboard() {
         </View>
       </ScrollView>
 
-      {/* Floating Bottom Tab Bar */}
+      {/* --- FLOATING NAVBAR WITH CLICKABLE TABS --- */}
       <View className="absolute bottom-10 left-6 right-6 h-[72px] flex-row items-center justify-around rounded-full bg-[#e7e5e2] px-2 shadow-xl shadow-black/10">
-        <Pressable className="h-14 flex-row items-center gap-2 rounded-full bg-[#8f140e] px-5">
+        
+        {/* Dashboard Tab (Current) */}
+        <Pressable 
+          onPress={() => router.push("/dashboard")}
+          className="h-14 flex-row items-center gap-2 rounded-full bg-[#8f140e] px-5"
+        >
           <MaterialCommunityIcons name="view-dashboard" size={20} color="white" />
           <Text className="text-[11px] font-bold text-white">DASHBOARD</Text>
         </Pressable>
 
-        <Pressable className="items-center justify-center p-2">
+        {/* Students Tab */}
+        <Pressable 
+          onPress={() => router.push("/students")} 
+          className="items-center justify-center p-2 active:opacity-50"
+        >
           <Feather name="users" size={20} color="#6d6a67" />
           <Text className="mt-1 text-[9px] font-bold text-[#6d6a67]">STUDENTS</Text>
         </Pressable>
 
-        <Pressable className="items-center justify-center p-2">
+        {/* Subjects Tab */}
+        <Pressable 
+          onPress={() => router.push("/subjects")}
+          className="items-center justify-center p-2 active:opacity-50"
+        >
           <Feather name="book-open" size={20} color="#6d6a67" />
           <Text className="mt-1 text-[9px] font-bold text-[#6d6a67]">SUBJECTS</Text>
         </Pressable>
 
-        <Pressable className="items-center justify-center p-2">
+        {/* Alerts Tab */}
+        <Pressable 
+          onPress={() => router.push("/alerts")}
+          className="items-center justify-center p-2 active:opacity-50"
+        >
           <Feather name="bell" size={20} color="#6d6a67" />
           <Text className="mt-1 text-[9px] font-bold text-[#6d6a67]">ALERTS</Text>
         </Pressable>
