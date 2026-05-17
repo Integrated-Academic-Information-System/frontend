@@ -1,0 +1,26 @@
+import { Text, Pressable, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+
+export default function DashboardScreen() {
+  const router = useRouter();
+
+  const handleMarksEntry = () => {
+    router.push("/(tabs)/admin/marks-entry");
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center px-6">
+      <View className="items-center gap-8">
+        <Text className="text-2xl font-bold text-[#8f140e]">Dashboard</Text>
+        
+        <Pressable 
+          onPress={handleMarksEntry}
+          className="bg-[#8f140e] px-8 py-4 rounded-2xl shadow-lg shadow-[#8f140e]/30 active:opacity-80"
+        >
+          <Text className="text-lg font-bold text-white">Go to Marks Entry</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
+  );
+}

@@ -1,10 +1,11 @@
 //index.tsx
 
-import { Link } from "expo-router";
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -13,7 +14,6 @@ import {
   Text,
   TextInput,
   View,
-  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -32,10 +32,16 @@ export default function Index() {
     setLanguage("English");
   };
 
-  const handleSignIn = () => {
-  // router.replace("/(tabs)/admin/dashboard"); 
-  router.replace("/(tabs)/admin/marks-entry"); // <-- only for testing purposes, replace with actual dashboard route after development
-};
+  const handleSignIn = async () => {
+    try {
+      // Save auth token to AsyncStorage
+      await AsyncStorage.setItem("authToken", "user_token_" + Date.now());
+      // Navigate to dashboard
+      router.replace("/(tabs)/admin/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]">
