@@ -33,8 +33,9 @@ export default function Index() {
   };
 
   const handleSignIn = () => {
-    router.replace("/(tabs)/admin/dashboard");
-  };
+  // router.replace("/(tabs)/admin/dashboard"); 
+  router.replace("/(tabs)/admin/marks-entry"); // <-- only for testing purposes, replace with actual dashboard route after development
+};
 
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]">
