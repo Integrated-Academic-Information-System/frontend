@@ -7,13 +7,23 @@ import "./global.css";
 
 export default function RootLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [userRole, setUserRole] = useState<
+    "admin" | "student" | "teacher" | null
+  >(null);
 
   useEffect(() => {
-    // Check if user is logged in on app startup
+    // Check if user is logged in and get their role on app startup
     const checkAuth = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-        setIsLoggedIn(!!token);
+        const role = await AsyncStorage.getItem("userRole");
+
+        if (token) {
+          setIsLoggedIn(true);
+          setUserRole((role as "admin" | "student" | "teacher") || "admin");
+        } else {
+          setIsLoggedIn(false);
+        }
       } catch (error) {
         setIsLoggedIn(false);
       }
@@ -34,7 +44,12 @@ export default function RootLayout() {
         }}
       >
         {isLoggedIn ? (
-          <Stack.Screen name="(tabs)" />
+          <>
+            {/* Route to appropriate role-based navigation */}
+            {userRole === "admin" && <Stack.Screen name="(admin)" />}
+            {userRole === "student" && <Stack.Screen name="(student)" />}
+            {userRole === "teacher" && <Stack.Screen name="(teacher)" />}
+          </>
         ) : (
           <Stack.Screen name="index" />
         )}

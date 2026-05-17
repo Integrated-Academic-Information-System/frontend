@@ -28,12 +28,12 @@ const TabIcon = ({ focused, iconName, label, IconType }: any) => {
   );
 };
 
-export default function GlobalTabsLayout() {
+export default function TeacherTabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false, // hide top default header
-        tabBarShowLabel: false, // Default labels hide becouse put the  custom thing
+        headerShown: false,
+        tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
           bottom: Platform.OS === "ios" ? 24 : 16,
@@ -53,77 +53,48 @@ export default function GlobalTabsLayout() {
         },
       }}
     >
-      {/* HERE WE LINK THE API TABS.
-        Since the folders are inside 'admin/', you need to give that path.
-      */}
-
-      {/* 1. Dashboard Tab */}
+      {/* Add teacher-specific tabs here */}
       <Tabs.Screen
-        name="admin/dashboard"
+        name="index"
         options={{
           tabBarIcon: ({ focused }) => (
             <TabIcon
               focused={focused}
-              iconName="view-dashboard-outline"
-              label="Dashboard"
-              IconType={MaterialCommunityIcons}
+              iconName="home"
+              label="Home"
+              IconType={Feather}
             />
           ),
         }}
       />
 
-      {/* 2. Students Tab */}
       <Tabs.Screen
-        name="admin/students"
+        name="class-incharge/classes"
         options={{
           tabBarIcon: ({ focused }) => (
             <TabIcon
               focused={focused}
               iconName="users"
-              label="Students"
+              label="Classes"
               IconType={Feather}
             />
           ),
         }}
       />
 
-      {/* 3. Subjects / Marks Entry Tab (Oya hadapu eka) */}
       <Tabs.Screen
-        name="admin/marks-entry"
+        name="subject-teacher/marks-entry"
         options={{
           tabBarIcon: ({ focused }) => (
             <TabIcon
               focused={focused}
               iconName="book-open-variant"
-              label="Subjects"
+              label="Marks"
               IconType={MaterialCommunityIcons}
             />
           ),
         }}
       />
-
-      {/* 4. Alerts Tab */}
-      <Tabs.Screen
-        name="admin/alerts"
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon
-              focused={focused}
-              iconName="bell"
-              label="Alerts"
-              IconType={Feather}
-            />
-          ),
-        }}
-      />
-
-      {/* HIDE KARANNA ONE FILES TIKA:
-        Me folders/files yatama bottom bar eke tab ekak widihata penna ona nathi nisa `href: null` danawa.
-      */}
-      <Tabs.Screen name="admin/_layout" options={{ href: null }} />
-      <Tabs.Screen name="admin/subjects" options={{ href: null }} />
-      <Tabs.Screen name="student" options={{ href: null }} />
-      <Tabs.Screen name="teacher" options={{ href: null }} />
     </Tabs>
   );
 }

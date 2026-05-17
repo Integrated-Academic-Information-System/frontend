@@ -1,10 +1,10 @@
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ClassStudentsScreen() {
+export default function TeacherHomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
-      <Text className="text-2xl font-bold text-[#8f140e]">Class Students</Text>
+      <Text className="text-2xl font-bold text-[#8f140e]">Teacher Home</Text>
     </SafeAreaView>
   );
 }

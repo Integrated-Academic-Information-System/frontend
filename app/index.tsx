@@ -34,10 +34,12 @@ export default function Index() {
 
   const handleSignIn = async () => {
     try {
-      // Save auth token to AsyncStorage
+      // Save auth token and user role to AsyncStorage
       await AsyncStorage.setItem("authToken", "user_token_" + Date.now());
-      // Navigate to dashboard
-      router.replace("/(tabs)/admin/dashboard");
+      // For now, default to admin role (you can implement role detection based on credentials)
+      await AsyncStorage.setItem("userRole", "admin");
+      // Navigate to admin dashboard
+      router.replace("/(admin)/(tabs)/dashboard");
     } catch (error) {
       console.error("Login error:", error);
     }
