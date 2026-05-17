@@ -1,10 +1,8 @@
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
+// Import the shared component from the src directory
+import MarksEntryUI from "../../../../src/components/MarksEntryUI"; 
 
-export default function TeacherMarksEntryScreen() {
-  return (
-    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
-      <Text className="text-2xl font-bold text-[#8f140e]">Marks Entry</Text>
-    </SafeAreaView>
-  );
+export default function SubjectTeacherMarksEntryScreen() {
+  // Pass the 'subject_teacher' role to enable edit capabilities
+  return <MarksEntryUI userRole="subject_teacher" />;
 }
