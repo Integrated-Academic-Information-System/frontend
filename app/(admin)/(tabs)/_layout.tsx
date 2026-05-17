@@ -18,7 +18,7 @@ const TabIcon = ({ focused, iconName, label, IconType }: any) => {
         color={focused ? "#ffffff" : "#8e847f"}
       />
       <Text
-        className={`text-[9px] font-bold mt-1 tracking-wider uppercase ${
+        className={`text-[8.5px] font-bold mt-1 tracking-wider uppercase ${
           focused ? "text-white" : "text-[#8e847f]"
         }`}
       >

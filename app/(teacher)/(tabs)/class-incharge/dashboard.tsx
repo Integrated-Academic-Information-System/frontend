@@ -3,11 +3,12 @@ import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function DashboardScreen() {
+export default function ClassInchargeDashboard() {
   const router = useRouter();
 
-  const handleMarksEntry = () => {
-    router.push("/(admin)/(tabs)/marks-entry");
+  const handleManageClasses = () => {
+    // Screenshot eke thiyena classes.tsx ekata point karanawa
+    router.push("/(teacher)/(tabs)/class-incharge/marks-entry");
   };
 
   return (
@@ -21,14 +22,14 @@ export default function DashboardScreen() {
       </Pressable>
 
       <View className="items-center gap-8">
-        <Text className="text-2xl font-bold text-[#8f140e]">Dashboard</Text>
+        <Text className="text-2xl font-bold text-[#8f140e]">Class Incharge</Text>
 
         <Pressable
-          onPress={handleMarksEntry}
+          onPress={handleManageClasses}
           className="bg-[#8f140e] px-8 py-4 rounded-2xl shadow-lg shadow-[#8f140e]/30 active:opacity-80"
         >
           <Text className="text-lg font-bold text-white">
-            Go to Marks Entry
+             Go to Marks Entry
           </Text>
         </Pressable>
       </View>

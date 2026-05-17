@@ -34,12 +34,11 @@ export default function Index() {
 
   const handleSignIn = async () => {
     try {
-      // Save auth token and user role to AsyncStorage
-      await AsyncStorage.setItem("authToken", "user_token_" + Date.now());
-      // For now, default to admin role (you can implement role detection based on credentials)
-      await AsyncStorage.setItem("userRole", "admin");
-      // Navigate to admin dashboard
-      router.replace("/(admin)/(tabs)/dashboard");
+      // Save dummy auth token to AsyncStorage
+      await AsyncStorage.setItem("authToken", "dev_token_" + Date.now());
+      
+      // Navigate to our temporary development role selector
+      router.replace("/role-selector"); 
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -65,6 +64,7 @@ export default function Index() {
                     <Image
                       source={require("../assets/images/school-logo.png")}
                       className="h-full w-full"
+                      style={{ width: 44, height: 44 }}
                       resizeMode="cover"
                     />
                   </View>
