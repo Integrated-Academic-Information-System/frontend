@@ -1,5 +1,4 @@
-//index.tsx
-
+import { loginApi } from "../src/services/api";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
@@ -23,6 +22,8 @@ export default function Index() {
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState<"English" | "Sinhala">("English");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleClearForm = () => {
     setUsername("");
@@ -30,17 +31,43 @@ export default function Index() {
     setRememberMe(false);
     setShowPassword(false);
     setLanguage("English");
+    setError("");
   };
 
   const handleSignIn = async () => {
+    if (!username || !password) {
+      setError("Please enter email and password.");
+      return;
+    }
+
     try {
-      // Save dummy auth token to AsyncStorage
-      await AsyncStorage.setItem("authToken", "dev_token_" + Date.now());
-      
-      // Navigate to our temporary development role selector
-      router.replace("/role-selector"); 
-    } catch (error) {
-      console.error("Login error:", error);
+      setIsLoading(true);
+      setError("");
+
+      const response = await loginApi(username, password);
+      const { token, user } = response.data;
+
+      // Save token and user info
+      await AsyncStorage.setItem("authToken", token);
+      await AsyncStorage.setItem("userRole", user.role);
+      await AsyncStorage.setItem("userData", JSON.stringify(user));
+
+      // Navigate based on role
+      if (user.role === "admin") {
+        router.replace("/(admin)/(tabs)/dashboard");
+      } else if (user.role === "student") {
+        router.replace("/(student)/(tabs)/dashboard");
+      } else if (user.role === "subject_teacher") {
+        router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
+      } else if (user.role === "class_incharge") {
+        router.replace("/(teacher)/(tabs)/class-incharge/dashboard");
+      }
+    } catch (err: any) {
+      const message =
+        err.response?.data?.message || "Login failed. Please try again.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,14 +146,8 @@ export default function Index() {
                     className="ml-3 flex-1 text-[17px] text-[#433735]"
                   />
                   <Pressable
-                    onPress={() =>
-                      setShowPassword((currentValue) => !currentValue)
-                    }
+                    onPress={() => setShowPassword((v) => !v)}
                     hitSlop={10}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      showPassword ? "Hide password" : "Show password"
-                    }
                   >
                     <Ionicons
                       name={showPassword ? "eye-off-outline" : "eye-outline"}
@@ -139,10 +160,8 @@ export default function Index() {
 
               <View className="mt-4 flex-row items-start justify-between">
                 <Pressable
-                  onPress={() => setRememberMe((currentValue) => !currentValue)}
+                  onPress={() => setRememberMe((v) => !v)}
                   className="flex-row items-start gap-2"
-                  accessibilityRole="checkbox"
-                  accessibilityState={{ checked: rememberMe }}
                 >
                   <View
                     className={`mt-0.5 h-5 w-5 rounded-[5px] border border-[#dfd8d3] items-center justify-center ${
@@ -158,26 +177,40 @@ export default function Index() {
                   </Text>
                 </Pressable>
 
-                <Pressable onPress={() => {}} hitSlop={10}>
+                <Pressable hitSlop={10}>
                   <Text className="text-right text-[16px] font-bold leading-5 text-[#8f140e]">
                     Forgot Password?
                   </Text>
                 </Pressable>
               </View>
 
+              {/* Error Message */}
+              {error ? (
+                <View className="mt-4 px-2 py-3 bg-red-50 rounded-2xl">
+                  <Text className="text-red-500 text-center text-[14px] font-medium">
+                    {error}
+                  </Text>
+                </View>
+              ) : null}
+
               <View className="mt-8 gap-3">
+                {/* Sign In Button */}
                 <Pressable
                   onPress={handleSignIn}
+                  disabled={isLoading}
                   className="h-14 items-center justify-center rounded-full bg-[#8f140e] shadow-lg shadow-black/20"
                 >
                   <View className="flex-row items-center gap-2">
                     <Text className="text-[18px] font-semibold text-white">
-                      Sign In
+                      {isLoading ? "Signing in..." : "Sign In"}
                     </Text>
-                    <Feather name="arrow-right" size={22} color="#fff" />
+                    {!isLoading && (
+                      <Feather name="arrow-right" size={22} color="#fff" />
+                    )}
                   </View>
                 </Pressable>
 
+                {/* Clear Button */}
                 <Pressable
                   onPress={handleClearForm}
                   className="h-14 items-center justify-center rounded-full"
