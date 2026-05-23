@@ -1,4 +1,3 @@
-// app/_layout.tsx
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
@@ -6,50 +5,39 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
 
 export default function RootLayout() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const [userRole, setUserRole] = useState<
-    "admin" | "student" | "teacher" | null
-  >(null);
+  const [isReady, setIsReady] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if user is logged in and get their role on app startup
     const checkAuth = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-        const role = await AsyncStorage.getItem("userRole");
 
-        if (token) {
+        // If token is a dummy dev token, clear it
+        if (token && token.startsWith("dev_token_")) {
+          await AsyncStorage.clear();
+          setIsLoggedIn(false);
+        } else if (token) {
           setIsLoggedIn(true);
-          setUserRole((role as "admin" | "student" | "teacher") || "admin");
         } else {
           setIsLoggedIn(false);
         }
       } catch (error) {
         setIsLoggedIn(false);
+      } finally {
+        setIsReady(true);
       }
     };
     checkAuth();
   }, []);
 
-  // Show nothing while checking auth
-  if (isLoggedIn === null) {
-    return null;
-  }
+  if (!isReady) return null;
 
   return (
     <SafeAreaProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false, // disable for ALL screens
-        }}
-      >
+      <Stack screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
-          <>
-            {/* Route to appropriate role-based navigation */}
-            {userRole === "admin" && <Stack.Screen name="(admin)" />}
-            {userRole === "student" && <Stack.Screen name="(student)" />}
-            {userRole === "teacher" && <Stack.Screen name="(teacher)" />}
-          </>
+          <Stack.Screen name="(admin)" />
         ) : (
           <Stack.Screen name="index" />
         )}
