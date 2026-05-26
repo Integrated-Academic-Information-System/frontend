@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+>>>>>>> parent of 184bba6 (refactor: remove unused files and dependencies, including package.json, api services, and UI components for marks entry)
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
@@ -43,6 +46,9 @@ app-example
 # generated native folders
 /ios
 /android
+<<<<<<< HEAD
 =======
 node_modules
 >>>>>>> Stashed changes
+=======
+>>>>>>> parent of 184bba6 (refactor: remove unused files and dependencies, including package.json, api services, and UI components for marks entry)
