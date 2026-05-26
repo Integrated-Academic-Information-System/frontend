@@ -2,16 +2,9 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-<<<<<<< HEAD
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./*"]
-=======
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
->>>>>>> parent of 184bba6 (refactor: remove unused files and dependencies, including package.json, api services, and UI components for marks entry)
     }
   },
   "include": [
