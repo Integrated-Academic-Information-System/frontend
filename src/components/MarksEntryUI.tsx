@@ -1,5 +1,5 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Added useEffect here
 import {
   Image,
   KeyboardAvoidingView,
@@ -14,30 +14,46 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Dummy data for the class roster
-const DUMMY_STUDENTS = [
-  { id: "1", name: "Adrian Thorne", index: "12345", marks: "88", status: "validated" },
-  { id: "2", name: "Beatrix Vance", index: "12346", marks: "", status: "pending" },
-  { id: "3", name: "Cassian Grey", index: "12347", marks: "74", status: "validated" },
-  { id: "4", name: "Daphne Laize", index: "12348", marks: "", status: "pending" },
-];
-
 // Props: Receives userRole to determine UI rendering and permissions
 export default function MarksEntryUI({ 
   userRole 
 }: { 
   userRole: "admin" | "subject_teacher" | "class_incharge" 
 }) {
-  const [students, setStudents] = useState(DUMMY_STUDENTS);
+  // Initialized state with an empty array to hold data from the database
+  const [students, setStudents] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [academicYear, setAcademicYear] = useState("2023-2024");
+
+  // get IP in .env file and construct the API URL for fetching students
+  const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/students`;
+
+  // Fetch students from the Laravel backend when the component mounts
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await fetch(API_URL);
+      const json = await response.json();
+      
+      if (json.success) {
+        // Populate the state with the data received from the database
+        setStudents(json.data); 
+      }
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      Alert.alert("Connection Error", "Could not connect to the database. Ensure the backend server is running.");
+    }
+  };
 
   // ROLE PERMISSIONS LOGIC
   // Admins and Subject Teachers can edit marks. Class Incharges can only view.
   const canEditMarks = userRole === "admin" || userRole === "subject_teacher";
   const isClassIncharge = userRole === "class_incharge";
 
-  // Determine the display name for the top badge
+  // Determine the display name for the top badge based on role
   const roleDisplayName = 
     userRole === "admin" ? "Admin" : 
     userRole === "subject_teacher" ? "Subject Teacher" : "Class Incharge";
@@ -55,14 +71,14 @@ export default function MarksEntryUI({
     </View>
   );
 
-  // Filter students based on search query (by name or index)
+  // Filter students based on search query (by name or index number)
   const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.index.includes(searchQuery)
+      student.reg_no?.includes(searchQuery) // Updated to match database column name (reg_no)
   );
 
-  // Update specific student's marks in the state array
+  // Update specific student's marks in the local state array
   const handleUpdateMark = (id: string, text: string) => {
     setStudents((prevStudents) =>
       prevStudents.map((student) =>
@@ -71,14 +87,14 @@ export default function MarksEntryUI({
     );
   };
 
-  // Mock submission handler for editable roles
+  // Mock submission handler for roles with editing permissions
   const handleSubmitMarks = () => {
     console.log("Saving for Academic Year:", academicYear);
     console.log("Student Marks Data:", students);
-    Alert.alert("Success", "Marks have been saved successfully! (Backend pending)", [{ text: "OK" }]);
+    Alert.alert("Success", "Marks have been saved successfully! (Backend saving pending)", [{ text: "OK" }]);
   };
 
-  // Mock report generation handler for view-only roles
+  // Mock report generation handler for view-only roles (e.g., Class Incharge)
   const handleGenerateReport = () => {
     Alert.alert("Report Generated", "Class report has been successfully generated and saved.", [{ text: "OK" }]);
   };
@@ -96,11 +112,10 @@ export default function MarksEntryUI({
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Top Profile / Role Badge */}
+          {/* Top Profile & Role Badge Section */}
           <View className="flex-row items-center justify-between mb-4 px-1">
             <View className="flex-row items-center bg-white px-3 py-1.5 rounded-full shadow-sm shadow-black/5">
               <Image
-                // Adjusted path assuming components is inside src and images are in assets
                 source={require("../../assets/images/school-logo.png")} 
                 style={{ width: 24, height: 24, borderRadius: 12 }}
                 className="h-6 w-6 rounded-full"
@@ -118,7 +133,7 @@ export default function MarksEntryUI({
             </View>
           </View>
 
-          {/* Page Title & Editable Academic Year */}
+          {/* Page Title & Editable Academic Year Section */}
           <View className="mb-6 px-1">
             <Text className="text-[28px] font-extrabold text-[#212121]">Marks Entry</Text>
             <View className="flex-row items-center mt-2">
@@ -129,7 +144,7 @@ export default function MarksEntryUI({
                   onChangeText={setAcademicYear}
                   placeholder="e.g. 2023-2024"
                   placeholderTextColor="#a5928a"
-                  editable={canEditMarks} // Disabled if user lacks edit permission
+                  editable={canEditMarks} // Disabled if the user lacks edit permissions
                   className="text-[14px] font-bold text-[#8f140e] p-0 m-0 w-[80px]"
                 />
                 {canEditMarks && <Feather name="edit-2" size={12} color="#a5928a" className="ml-1" />}
@@ -151,7 +166,7 @@ export default function MarksEntryUI({
           {/* Class Roster Card */}
           <View className="rounded-[32px] bg-white p-5 shadow-xl shadow-black/5 mb-6">
             
-            {/* Search Bar */}
+            {/* Search Input Field */}
             <View className="mb-6 h-12 flex-row items-center rounded-2xl bg-[#f7f5f2] px-4">
               <Feather name="search" size={18} color="#8e847f" />
               <TextInput
@@ -178,7 +193,7 @@ export default function MarksEntryUI({
               </View>
             </View>
 
-            {/* Student List with Permission Logic */}
+            {/* Render Student List with Permission-Based Logic */}
             {filteredStudents.map((student, index) => (
               <View key={student.id} className={`flex-row items-center justify-between py-3 ${index !== filteredStudents.length - 1 ? "border-b border-[#f0ebe6]" : ""}`}>
                 <View className="flex-row items-center flex-1 shrink mr-2">
@@ -188,14 +203,14 @@ export default function MarksEntryUI({
                   />
                   <View className="ml-3 shrink pr-2">
                     <Text className="text-[15px] font-bold text-[#212121]" numberOfLines={1}>{student.name}</Text>
-                    <Text className="text-[11px] font-semibold text-[#8e847f] mt-0.5" numberOfLines={1}>INDEX NO : {student.index}</Text>
+                    <Text className="text-[11px] font-semibold text-[#8e847f] mt-0.5" numberOfLines={1}>INDEX NO : {student.reg_no}</Text>
                   </View>
                 </View>
 
-                {/* MARKS FIELD LOGIC */}
+                {/* MARKS INPUT FIELD LOGIC */}
                 <View className="flex-shrink-0">
                   {canEditMarks ? (
-                    // Render editable input for Admins and Subject Teachers
+                    // Render editable text input for Admins and Subject Teachers
                     <TextInput
                       value={student.marks}
                       onChangeText={(text) => handleUpdateMark(student.id, text)}
@@ -206,7 +221,7 @@ export default function MarksEntryUI({
                       className={`h-12 w-16 rounded-xl text-center text-[16px] font-bold ${student.marks ? "bg-[#fceeed] text-[#8f140e]" : "bg-[#f7f5f2] text-[#212121]"}`}
                     />
                   ) : (
-                    // Render read-only text view for Class Incharge
+                    // Render read-only view for Class Incharge
                     <View className={`h-12 w-16 rounded-xl items-center justify-center ${student.marks ? "bg-[#f7f5f2]" : "bg-transparent"}`}>
                       <Text className={`text-[16px] font-bold ${student.marks ? "text-[#212121]" : "text-[#a5928a]"}`}>
                         {student.marks ? student.marks : "-"}
@@ -217,7 +232,7 @@ export default function MarksEntryUI({
               </View>
             ))}
 
-            {/* Empty state when search returns no results */}
+            {/* Empty state displayed when search returns no matches */}
             {filteredStudents.length === 0 && <Text className="text-center text-[#8e847f] py-4">No students found.</Text>}
 
             <Pressable className="mt-4 h-12 items-center justify-center rounded-xl bg-[#f7f5f2]">
@@ -225,7 +240,7 @@ export default function MarksEntryUI({
             </Pressable>
           </View>
 
-          {/* Entry Progress / Action Buttons Card */}
+          {/* Entry Progress & Action Buttons Card */}
           <View className="rounded-[32px] bg-white p-5 shadow-xl shadow-black/5 mb-6">
             <Text className="text-[11px] font-bold tracking-[1px] text-[#8e847f] uppercase mb-6 text-center">Entry Progress</Text>
             
@@ -251,7 +266,7 @@ export default function MarksEntryUI({
               <Text className="text-[14px] font-bold text-[#ef4444]">0</Text>
             </View>
 
-{/* BUTTON LOGIC: Conditional rendering based on role */}
+            {/* ACTION BUTTONS: Rendered conditionally based on the user's role */}
             {canEditMarks ? (
               <>
                 <Pressable onPress={handleSubmitMarks} className="h-14 items-center justify-center rounded-full bg-[#8f140e] shadow-lg shadow-[#8f140e]/30">
@@ -260,8 +275,6 @@ export default function MarksEntryUI({
                 <Text className="text-center text-[10px] font-bold text-[#a5928a] mt-3 uppercase tracking-[1px]">Locked after submission</Text>
               </>
             ) : isClassIncharge ? (
-              
-              /* FIX: Added inline style for backgroundColor so NativeWind doesn't drop it */
               <Pressable 
                 onPress={handleGenerateReport} 
                 className="h-14 items-center justify-center rounded-full shadow-lg shadow-black/30"
@@ -272,11 +285,10 @@ export default function MarksEntryUI({
                   <Text className="text-[16px] font-bold text-white ml-2">Generate Class Report</Text>
                 </View>
               </Pressable>
-
             ) : null}
           </View>
 
-          {/* Validation Rules Card */}
+          {/* Validation Rules Information Card */}
           <View className="px-2 mb-4">
             <Text className="text-[11px] font-bold tracking-[1px] text-[#8e847f] uppercase mb-4">Validation Rules</Text>
             <View className="gap-y-3">
