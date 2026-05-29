@@ -25,8 +25,8 @@ export default function MarksEntryUI({
   const [searchQuery, setSearchQuery] = useState("");
   const [academicYear, setAcademicYear] = useState("2023-2024");
 
-  // API Configuration using the local machine's IPv4 address
-  const API_URL = "http://192.168.112.112:8000/api/students";
+  // get IP in .env file and construct the API URL for fetching students
+  const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/students`;
 
   // Fetch students from the Laravel backend when the component mounts
   useEffect(() => {
