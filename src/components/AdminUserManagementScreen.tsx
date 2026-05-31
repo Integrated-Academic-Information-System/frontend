@@ -41,7 +41,7 @@ export const UserManagementScreen = () => {
 
   // Mock Data perfectly mirroring your second image's directory list
   const initialDirectory: UserDirectoryItem[] = [
-    {
+    { 
       id: '1',
       name: 'Alex Mercer',
       role: 'STUDENT',
