@@ -36,23 +36,26 @@ export default function RootLayout() {
     return null;
   }
 
+  const initialRouteName = !isLoggedIn
+    ? "index"
+    : userRole === "admin"
+      ? "(admin)/(tabs)"
+      : userRole === "student"
+        ? "(student)/(tabs)"
+        : "(teacher)/(tabs)";
+
   return (
     <SafeAreaProvider>
       <Stack
         screenOptions={{
           headerShown: false, // disable for ALL screens
         }}
+        initialRouteName={initialRouteName}
       >
-        {isLoggedIn ? (
-          <>
-            {/* Route to appropriate role-based navigation */}
-            {userRole === "admin" && <Stack.Screen name="(admin)" />}
-            {userRole === "student" && <Stack.Screen name="(student)" />}
-            {userRole === "teacher" && <Stack.Screen name="(teacher)" />}
-          </>
-        ) : (
-          <Stack.Screen name="index" />
-        )}
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(admin)/(tabs)" />
+        <Stack.Screen name="(student)/(tabs)" />
+        <Stack.Screen name="(teacher)/(tabs)" />
       </Stack>
     </SafeAreaProvider>
   );
