@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useState } from "react";
 import {
   ScrollView,
@@ -135,6 +136,7 @@ export default function StudentsScreen() {
           {/* Enroll New Student Box */}
           <TouchableOpacity
             activeOpacity={0.7}
+            onPress={() => router.push("/(admin)/admin-user-management")}
             className="border-2 border-dashed border-gray-200 bg-white rounded-3xl py-8 items-center justify-center mb-6"
           >
             <View className="w-12 h-12 rounded-full bg-gray-100 items-center justify-center mb-2">
@@ -147,52 +149,7 @@ export default function StudentsScreen() {
         </ScrollView>
       </View>
 
-      {/* Floating Sticky Bottom Navigation Bar */}
-      <View className="absolute bottom-6 left-6 right-6 bg-[#EAEAEA] rounded-full py-2 px-3 flex-row justify-between items-center shadow-md">
-        {/* Dashboard Tab */}
-        <TouchableOpacity
-          onPress={() => setActiveTab("DASHBOARD")}
-          className="items-center flex-1 py-1"
-        >
-          <Text className="text-lg mb-0.5">🎛️</Text>
-          <Text className="text-[10px] font-bold text-gray-500 tracking-wider">
-            DASHBOARD
-          </Text>
-        </TouchableOpacity>
-
-        {/* Students Tab - Active State */}
-        <TouchableOpacity
-          onPress={() => setActiveTab("STUDENTS")}
-          className="bg-[#7A0000] rounded-full px-5 py-2 flex-row items-center justify-center flex-1"
-        >
-          <Text className="text-white text-base mr-1.5">👥</Text>
-          <Text className="text-white text-xs font-bold tracking-wider">
-            STUDENTS
-          </Text>
-        </TouchableOpacity>
-
-        {/* Subjects Tab */}
-        <TouchableOpacity
-          onPress={() => setActiveTab("SUBJECTS")}
-          className="items-center flex-1 py-1"
-        >
-          <Text className="text-lg mb-0.5">📘</Text>
-          <Text className="text-[10px] font-bold text-gray-500 tracking-wider">
-            SUBJECTS
-          </Text>
-        </TouchableOpacity>
-
-        {/* Alerts Tab */}
-        <TouchableOpacity
-          onPress={() => setActiveTab("ALERTS")}
-          className="items-center flex-1 py-1"
-        >
-          <Text className="text-lg mb-0.5">🔔</Text>
-          <Text className="text-[10px] font-bold text-gray-500 tracking-wider">
-            ALERTS
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {/* Navigation provided by parent _layout.tsx; local nav removed */}
     </SafeAreaView>
   );
 }
