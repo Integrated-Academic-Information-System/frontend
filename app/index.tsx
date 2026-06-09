@@ -46,16 +46,17 @@ export default function Index() {
         return;
       }
 
-      // Sends the entered username and password from your React Native app 
+      // Sends the entered username and password from your React Native app
       // to the Laravel backend login API using a POST request.
-      const response = await fetch(process.env.EXPO_PUBLIC_API_URL+"/login", {
+      const response = await fetch(process.env.EXPO_PUBLIC_API_URL + "/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ //Make as a json
-          user_name: trimmedUsername, 
-          password: password, 
+        body: JSON.stringify({
+          //Make as a json
+          user_name: trimmedUsername,
+          password: password,
         }),
       });
 
@@ -71,8 +72,14 @@ export default function Index() {
       await AsyncStorage.setItem("authToken", data.token);
       await AsyncStorage.setItem("userName", data.user_name);
 
+      const userName = await AsyncStorage.getItem("userName");
+
+      if (userName?.toLowerCase().includes("admin")) {
+        router.replace("/(admin)/(tabs)/dashboard");
+        // console.log("Logged in as:", userName);
+      }
+
       // Move into the post-login flow so success is visible to the user.
-      router.replace("/(admin)/(tabs)/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       Alert.alert(
