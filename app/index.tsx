@@ -77,6 +77,9 @@ export default function Index() {
       if (userName?.toLowerCase().includes("admin")) {
         router.replace("/(admin)/(tabs)/dashboard");
         // console.log("Logged in as:", userName);
+      }else{
+        Alert.alert("You can not login!");
+        return;
       }
 
       // Move into the post-login flow so success is visible to the user.
