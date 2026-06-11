@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
+import { router, Slot } from "expo-router";
 
 export default function RootLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -18,6 +19,11 @@ export default function RootLayout() {
         const token = await AsyncStorage.getItem("authToken");
         const role = await AsyncStorage.getItem("userRole");
 
+        if (!token) {
+          // No token → go to login
+          router.replace("/");
+          return;
+        }
         if (token) {
           setIsLoggedIn(true);
           setUserRole((role as "admin" | "student" | "teacher") || "admin");

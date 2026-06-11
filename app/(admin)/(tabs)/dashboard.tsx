@@ -2,8 +2,12 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function DashboardScreen() {
+
+  useAuthGuard();
+
   const router = useRouter();
 
   const handleMarksEntry = () => {
