@@ -1,5 +1,3 @@
-//index.tsx
-
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
@@ -71,11 +69,23 @@ export default function Index() {
       // Save real token from backend
       await AsyncStorage.setItem("authToken", data.token);
       await AsyncStorage.setItem("userName", data.user_name);
+      await AsyncStorage.setItem("teacherStatus", String(data.teacher_status));
 
       const userName = await AsyncStorage.getItem("userName");
+      const teacherStatus = await AsyncStorage.getItem("teacherStatus");
 
       if (userName?.toLowerCase().includes("admin")) {
         router.replace("/(admin)/(tabs)/dashboard");
+        console.log(data.token);
+      }else if (userName?.toLowerCase().includes("reg")) {
+        router.replace("/(student)/(tabs)/dashboard");
+        console.log(data.token);
+      }else if (userName?.toLowerCase().includes("teacher")) {
+        if(teacherStatus === "0"){
+          router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
+        }else if(teacherStatus === "1"){
+          router.replace("/(teacher)/(tabs)/class-incharge/dashboard");
+        }
         console.log(data.token);
       }else{
         Alert.alert("You can not login!");
