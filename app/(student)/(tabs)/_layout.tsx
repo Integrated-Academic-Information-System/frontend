@@ -1,6 +1,10 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Platform, Text, View } from "react-native";
+import { Platform, Text, View, ActivityIndicator } from "react-native";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router, Slot } from "expo-router";
+
 
 // Reusable component for Tab Icons
 const TabIcon = ({ focused, iconName, label, IconType }: any) => {
@@ -29,6 +33,36 @@ const TabIcon = ({ focused, iconName, label, IconType }: any) => {
 };
 
 export default function StudentTabsLayout() {
+
+const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const userName = await AsyncStorage.getItem("userName");
+
+      const isAuthenticated = !!token;
+
+      if (!isAuthenticated) {
+        router.replace("/");
+        return;
+      }
+
+      setChecking(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  // Show a loader while checking
+  if (checking) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <Tabs
       screenOptions={{
