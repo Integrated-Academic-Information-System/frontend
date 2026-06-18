@@ -7,7 +7,7 @@ export default function StudentProfileScreen() {
     <SafeAreaView className="flex-1 bg-neutral-100">
       <StatusBar barStyle="dark-content" />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }} className="px-4">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }} className="flex-1 px-4">
         
         {/* --- MAIN PROFILE CARD --- */}
         <View className="bg-white rounded-[24px] p-6 items-center mt-6 shadow-sm">
@@ -53,6 +53,28 @@ export default function StudentProfileScreen() {
           <View className="flex-1">
             <Text className="text-[10px] font-bold text-neutral-400 tracking-wider">AVERAGE GPA</Text>
             <Text className="text-lg font-extrabold text-neutral-900 mt-0.5">3.92</Text>
+          </View>
+        </View>
+
+        {/* Credits */}
+        <View className="bg-white rounded-[18px] p-4 flex-row items-center mb-2.5 shadow-sm">
+          <View className="w-10 h-10 rounded-full bg-red-50 justify-center items-center mr-4">
+            <FontAwesome5 name="graduation-cap" size={16} color="#8f140e" />
+          </View>
+          <View className="flex-1">
+            <Text className="text-[10px] font-bold text-neutral-400 tracking-wider">CREDITS</Text>
+            <Text className="text-lg font-extrabold text-neutral-900 mt-0.5">24/26</Text>
+          </View>
+        </View>
+
+        {/* Attendance */}
+        <View className="bg-white rounded-[18px] p-4 flex-row items-center mb-2.5 shadow-sm">
+          <View className="w-10 h-10 rounded-full bg-red-50 justify-center items-center mr-4">
+            <MaterialCommunityIcons name="calendar-month" size={18} color="#8f140e" />
+          </View>
+          <View className="flex-1">
+            <Text className="text-[10px] font-bold text-neutral-400 tracking-wider">ATTENDANCE</Text>
+            <Text className="text-lg font-extrabold text-neutral-900 mt-0.5">98%</Text>
           </View>
         </View>
 
