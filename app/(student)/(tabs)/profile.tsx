@@ -1,5 +1,7 @@
-import { Feather, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Text, View, Image, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons, FontAwesome5, Feather } from '@expo/vector-icons';
 
 export default function StudentProfileScreen() {
   return (
@@ -7,9 +9,9 @@ export default function StudentProfileScreen() {
       <StatusBar barStyle="dark-content" />
 
       <ScrollView
+        className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120, paddingHorizontal: 16 }}
-        style={Platform.OS === 'web' ? { overflow: 'scroll' } : undefined}
       >
         
         {/* --- MAIN PROFILE CARD --- */}
