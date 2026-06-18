@@ -7,7 +7,7 @@ export default function StudentProfileScreen() {
     <SafeAreaView className="flex-1 bg-neutral-100">
       <StatusBar barStyle="dark-content" />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }} className="flex-1 px-4">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }} className="px-4">
         
         {/* --- MAIN PROFILE CARD --- */}
         <View className="bg-white rounded-[24px] p-6 items-center mt-6 shadow-sm">
@@ -75,6 +75,31 @@ export default function StudentProfileScreen() {
           <View className="flex-1">
             <Text className="text-[10px] font-bold text-neutral-400 tracking-wider">ATTENDANCE</Text>
             <Text className="text-lg font-extrabold text-neutral-900 mt-0.5">98%</Text>
+          </View>
+        </View>
+
+        {/* --- PERSONAL DETAILS CARD --- */}
+        <View className="bg-white rounded-[24px] p-5 mt-3 shadow-sm">
+          <Text className="text-lg font-extrabold text-neutral-900 mb-4">Personal Details</Text>
+          
+          <View className="mb-4">
+            <Text className="text-[9px] font-bold text-neutral-400 tracking-wider">FULL NAME</Text>
+            <Text className="text-sm font-semibold text-neutral-900 mt-1">Supun Piyumal</Text>
+          </View>
+
+          <View className="mb-4">
+            <Text className="text-[9px] font-bold text-neutral-400 tracking-wider">DATE OF BIRTH</Text>
+            <Text className="text-sm font-semibold text-neutral-900 mt-1">May 14, 2007</Text>
+          </View>
+
+          <View className="mb-4">
+            <Text className="text-[9px] font-bold text-neutral-400 tracking-wider">EMAIL ADDRESS</Text>
+            <Text className="text-sm font-semibold text-neutral-900 mt-1">j.thorne@academy.edu</Text>
+          </View>
+
+          <View className="mb-1">
+            <Text className="text-[9px] font-bold text-neutral-400 tracking-wider">EMERGENCY CONTACT</Text>
+            <Text className="text-sm font-semibold text-neutral-900 mt-1">Elena Thorne (+1 555-0129)</Text>
           </View>
         </View>
 
