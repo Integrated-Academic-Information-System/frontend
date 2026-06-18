@@ -103,6 +103,33 @@ export default function StudentProfileScreen() {
           </View>
         </View>
 
+        {/* --- CURRENT SUBJECTS SECTION --- */}
+        <View className="flex-row justify-between items-center mt-6 mb-3 px-1">
+          <Text className="text-lg font-extrabold text-neutral-900">Current Subjects</Text>
+          <TouchableOpacity>
+            <Text className="text-[#8f140e] font-bold text-xs">View Schedule</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Subject Rows */}
+        {[
+          { code: 'Σ', name: 'Advanced Mathematics', teacher: 'Prof. Aris Thorne' },
+          { code: '⚗', name: 'Quantum Physics', teacher: 'Dr. Sarah Chen' },
+          { code: '📖', name: 'Modern Literature', teacher: 'Julienne Vane' },
+          { code: '<>', name: 'Computer Science II', teacher: 'Marcus Reed' }
+        ].map((subject, index) => (
+          <TouchableOpacity key={index} className="bg-white rounded-2xl p-3.5 flex-row items-center mb-2 shadow-xs border border-neutral-100">
+            <View className="w-9 h-9 rounded-full bg-red-50 justify-center items-center">
+              <Text className="text-sm font-bold text-[#8f140e]">{subject.code}</Text>
+            </View>
+            <View className="flex-1 ml-3.5">
+              <Text className="text-sm font-bold text-neutral-800">{subject.name}</Text>
+              <Text className="text-xs text-neutral-500 mt-0.5">{subject.teacher}</Text>
+            </View>
+            <Feather name="chevron-right" size={18} color="#A0A0A0" />
+          </TouchableOpacity>
+         ))}
+
       </ScrollView>
     </SafeAreaView>
   );
