@@ -1,13 +1,16 @@
-import React from 'react';
-import { Text, View, Image, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
-import { MaterialCommunityIcons, FontAwesome5, Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Image, Platform, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 
 export default function StudentProfileScreen() {
   return (
     <SafeAreaView className="flex-1 bg-neutral-100">
       <StatusBar barStyle="dark-content" />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }} className="px-4">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 120, paddingHorizontal: 16 }}
+        style={Platform.OS === 'web' ? { overflow: 'scroll' } : undefined}
+      >
         
         {/* --- MAIN PROFILE CARD --- */}
         <View className="bg-white rounded-[24px] p-6 items-center mt-6 shadow-sm">
@@ -111,7 +114,6 @@ export default function StudentProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Subject Rows */}
         {[
           { code: 'Σ', name: 'Advanced Mathematics', teacher: 'Prof. Aris Thorne' },
           { code: '⚗', name: 'Quantum Physics', teacher: 'Dr. Sarah Chen' },
@@ -128,7 +130,7 @@ export default function StudentProfileScreen() {
             </View>
             <Feather name="chevron-right" size={18} color="#A0A0A0" />
           </TouchableOpacity>
-         ))}
+        ))}
 
       </ScrollView>
     </SafeAreaView>
