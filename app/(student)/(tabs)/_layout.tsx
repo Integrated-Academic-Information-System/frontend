@@ -88,6 +88,21 @@ const [checking, setChecking] = useState(true);
       }}
     >
       {/* Add student-specific tabs here */}
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              iconName="account-circle-outline"
+              label="Profile"
+              IconType={MaterialCommunityIcons}
+            />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="dashboard"
         options={{
