@@ -39,6 +39,23 @@ export default function StudentProfileScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* --- PERFORMANCE SECTION --- */}
+        <View className="flex-row justify-between items-center mt-6 mb-3 px-1">
+          <Text className="text-lg font-extrabold text-neutral-900">Performance</Text>
+          <MaterialCommunityIcons name="trending-up" size={20} color="#8f140e" />
+        </View>
+
+        {/* GPA */}
+        <View className="bg-white rounded-[18px] p-4 flex-row items-center mb-2.5 shadow-sm">
+          <View className="w-10 h-10 rounded-full bg-red-50 justify-center items-center mr-4">
+            <FontAwesome5 name="star" size={16} color="#8f140e" />
+          </View>
+          <View className="flex-1">
+            <Text className="text-[10px] font-bold text-neutral-400 tracking-wider">AVERAGE GPA</Text>
+            <Text className="text-lg font-extrabold text-neutral-900 mt-0.5">3.92</Text>
+          </View>
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
