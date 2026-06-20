@@ -1,3 +1,4 @@
+//app/(teacher)/subject-teacher/marks-entry.tsx
 import React from "react";
 // Import the shared component from the src directory
 import MarksEntryUI from "../../../../src/components/MarksEntryUI"; 
