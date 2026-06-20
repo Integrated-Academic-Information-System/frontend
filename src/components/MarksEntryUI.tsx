@@ -124,15 +124,54 @@ export default function MarksEntryUI({
     );
   };
 
-  // Mock submission handler for roles with editing permissions
-  const handleSubmitMarks = () => {
-    console.log("Saving for Academic Year:", academicYear);
-    console.log("Student Marks Data:", students);
-    Alert.alert(
-      "Success",
-      "Marks have been saved successfully! (Backend saving pending)",
-      [{ text: "OK" }],
-    );
+  // Real submission handler mapping state data to the backend API
+  const handleSubmitMarks = async () => {
+    try {
+      // 1. Filter out students who don't have a mark entered
+      const studentsWithMarks = students
+        .filter((s) => s.marks !== undefined && s.marks !== "")
+        .map((s) => ({
+          student_id: s.id,
+          mark: s.marks,
+        }));
+
+      if (studentsWithMarks.length === 0) {
+        Alert.alert("Warning", "Please enter marks for at least one student before submitting.");
+        return;
+      }
+
+      // 2. Prepare the payload to send to Laravel
+      const payload = {
+        academic_year: academicYear,
+        term: selectedTerm,
+        grade: selectedGrade,
+        marks_data: studentsWithMarks,
+      };
+
+      // 3. Make the POST request to the new endpoint
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/save-marks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          // "Authorization": `Bearer ${userToken}` // Uncomment this if you implement JWT checking for this route
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const json = await response.json();
+
+      // 4. Handle Backend Response
+      if (json.success) {
+        Alert.alert("Success", json.message, [{ text: "OK" }]);
+      } else {
+        Alert.alert("Database Error", json.message || "Something went wrong.");
+      }
+
+    } catch (error) {
+      console.error("Submit Error:", error);
+      Alert.alert("Connection Error", "Could not connect to the backend server.");
+    }
   };
 
   // Mock report generation handler for view-only roles (e.g., Class Incharge)
