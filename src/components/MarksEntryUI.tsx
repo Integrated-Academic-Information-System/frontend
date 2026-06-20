@@ -16,7 +16,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Props: Receives userRole to determine UI rendering and permissions
 export default function MarksEntryUI({
   userRole,
 }: {
@@ -25,19 +24,16 @@ export default function MarksEntryUI({
   const [students, setStudents] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Dropdown options states from backend
   const [grades, setGrades] = useState<any[]>([]);
   const [terms, setTerms] = useState<any[]>([]);
   const [subjects, setSubjects] = useState<any[]>([]);
   const [examYears, setExamYears] = useState<any[]>([]);
 
-  // Selected object states (holds id and name)
   const [selectedGrade, setSelectedGrade] = useState<any>(null);
   const [selectedTerm, setSelectedTerm] = useState<any>(null);
   const [selectedSubject, setSelectedSubject] = useState<any>(null);
-  const [selectedYear, setSelectedYear] = useState<any>(null); 
+  const [selectedYear, setSelectedYear] = useState<any>(null);
 
-  // Modal visibility states
   const [showGradeModal, setShowGradeModal] = useState(false);
   const [showTermModal, setShowTermModal] = useState(false);
   const [showSubjectModal, setShowSubjectModal] = useState(false);
@@ -45,14 +41,51 @@ export default function MarksEntryUI({
 
   const API_URL = `${process.env.EXPO_PUBLIC_API_URL}`;
 
+  // 1. Initial Load: Fetch Dropdowns
   useEffect(() => {
-    fetchStudents();
     fetchFormData();
   }, []);
 
+  // 2. Fetch Students whenever ANY dropdown changes
+  useEffect(() => {
+    if (selectedGrade && selectedTerm && selectedYear) {
+      fetchStudents();
+    }
+  }, [selectedGrade, selectedTerm, selectedSubject, selectedYear]);
+
+  // CATEGORIZED SUBJECT ARRAYS (Based on your logic)
+  const grade6to9Subjects = ['First Language (Sinhala/Tamil)', 'English Language', 'Mathematics', 'Science', 'History', 'Geography', 'Citizenship Education (Civics)', 'Religion', 'Aesthetic Subject (Art/Music/Dancing/Drama)', 'ICT', 'PTS'];
+  const grade10to11Subjects = ['First Language (Sinhala/Tamil)', 'Mathematics', 'Science', 'English Language', 'History', 'Religion', 'Business & Accounting Studies', 'Geography', 'Citizenship Education (Civics)', 'Entrepreneurship Studies', 'Foreign Languages', 'Aesthetic Subject (Art/Music/Dancing/Drama)', 'ICT', 'Agriculture & Food Technology', 'Aquatic Bio-Resources Technology', 'Home Economics', 'Arts & Crafts', 'Mechanical/Electrical/Electronic Technology', 'Design & Technology', 'Media Studies', 'Logic'];
+  const grade12to13Subjects = ['Combined Mathematics', 'Physics', 'Chemistry', 'Biology', 'Agricultural Science', 'Accounting', 'Business Studies', 'Economics', 'Science for Technology (SFT)', 'Engineering Technology', 'Bio-Systems Technology', 'Logic', 'Media Studies', 'Geography', 'Citizenship Education (Civics)', 'English Language', 'ICT'];
+
+  // Function to filter subjects based on the currently selected grade
+  const getFilteredSubjects = () => {
+    if (!selectedGrade) return subjects;
+    
+    // Extract the numeric grade from "Grade 6", "Grade 10" etc.
+    const baseGrade = selectedGrade.base_grade || "";
+    const num = parseInt(baseGrade.replace(/\D/g, ''));
+    
+    if (num >= 6 && num <= 9) {
+      return subjects.filter(s => grade6to9Subjects.includes(s.name));
+    } else if (num === 10 || num === 11) {
+      return subjects.filter(s => grade10to11Subjects.includes(s.name));
+    } else if (num === 12 || num === 13) {
+      return subjects.filter(s => grade12to13Subjects.includes(s.name));
+    }
+    return subjects; // Fallback
+  };
+
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`${API_URL}/students`);
+      // Append selected IDs to the URL so the backend filters the marks
+      const queryParams = new URLSearchParams();
+      if (selectedGrade) queryParams.append("grade_id", selectedGrade.id);
+      if (selectedTerm) queryParams.append("term_id", selectedTerm.id);
+      if (selectedSubject) queryParams.append("subject_id", selectedSubject.id);
+      if (selectedYear) queryParams.append("exam_year_id", selectedYear.id);
+
+      const response = await fetch(`${API_URL}/students?${queryParams.toString()}`);
       const json = await response.json();
       if (json.success) setStudents(json.data);
     } catch (error) {
@@ -71,24 +104,21 @@ export default function MarksEntryUI({
         setSubjects(json.data.subjects);
         setExamYears(json.data.exam_years);
 
-        // Set defaults to first item in the list
         if (json.data.grades.length > 0) setSelectedGrade(json.data.grades[0]);
         if (json.data.terms.length > 0) setSelectedTerm(json.data.terms[0]);
-        if (json.data.subjects.length > 0) setSelectedSubject(json.data.subjects[0]);
         if (json.data.exam_years.length > 0) setSelectedYear(json.data.exam_years[0]);
+        // Note: Subject is deliberately NOT set automatically here, so it updates correctly on grade change
       }
     } catch (error) {
       console.error("Error fetching form data:", error);
     }
   };
 
-  // Helper function to calculate the Official Grade Letter based on SL Exam Dept rules
   const getOfficialGradeLetter = (mark: string | undefined) => {
     if (!mark || mark === "") return "-";
     const num = parseInt(mark);
     if (isNaN(num) || num < 0 || num > 100) return "-";
 
-    // Check if the selected class is Advanced Level (Grade 12 or 13) to apply 'F' instead of 'W'
     const isAL = selectedGrade?.base_grade?.includes("12") || selectedGrade?.base_grade?.includes("13");
 
     if (num >= 75) return "A";
@@ -133,7 +163,11 @@ export default function MarksEntryUI({
         return;
       }
 
-      // Send the dynamic IDs to the backend
+      if (!selectedSubject) {
+        Alert.alert("Warning", "Please select a Subject first.");
+        return;
+      }
+
       const payload = {
         exam_year_id: selectedYear?.id, 
         term_id: selectedTerm?.id,
@@ -157,11 +191,7 @@ export default function MarksEntryUI({
   };
 
   const handleGenerateReport = () => {
-    Alert.alert(
-      "Report Generated",
-      "Class report has been successfully generated and saved.",
-      [{ text: "OK" }]
-    );
+    Alert.alert("Report Generated", "Class report has been successfully generated.", [{ text: "OK" }]);
   };
 
   return (
@@ -181,8 +211,6 @@ export default function MarksEntryUI({
             <Text className="text-[28px] font-extrabold text-[#212121]">Marks Entry</Text>
             <View className="flex-row items-center mt-2">
               <Text className="text-[14px] text-[#6d615c] font-medium mr-2">Academic Year:</Text>
-              
-              {/* Dynamic Academic Year Dropdown */}
               <Pressable 
                 onPress={() => canEditMarks && setShowYearModal(true)} 
                 className="flex-row items-center bg-white px-3 py-1.5 rounded-lg border border-[#d6d0cb]"
@@ -197,14 +225,14 @@ export default function MarksEntryUI({
           <View className="rounded-[32px] bg-white p-5 shadow-xl shadow-black/5 mb-6">
             <DropdownField label="Class / Grade" value={selectedGrade ? selectedGrade.name : "Loading..."} onPress={() => setShowGradeModal(true)} />
             <DropdownField label="Term" value={selectedTerm ? selectedTerm.name : "Loading..."} onPress={() => setShowTermModal(true)} />
-            <DropdownField label="Subject" value={selectedSubject ? selectedSubject.name : "Loading..."} onPress={() => setShowSubjectModal(true)} />
+            <DropdownField label="Subject" value={selectedSubject ? selectedSubject.name : "Select a Subject"} onPress={() => setShowSubjectModal(true)} />
           </View>
 
-          {/* Generic Modal Helper to render all 4 modals */}
+          {/* Modal Setup */}
           {[
-            { visible: showGradeModal, data: grades, setter: setSelectedGrade, closer: setShowGradeModal, selected: selectedGrade },
+            { visible: showGradeModal, data: grades, setter: (val: any) => { setSelectedGrade(val); setSelectedSubject(null); }, closer: setShowGradeModal, selected: selectedGrade },
             { visible: showTermModal, data: terms, setter: setSelectedTerm, closer: setShowTermModal, selected: selectedTerm },
-            { visible: showSubjectModal, data: subjects, setter: setSelectedSubject, closer: setShowSubjectModal, selected: selectedSubject },
+            { visible: showSubjectModal, data: getFilteredSubjects(), setter: setSelectedSubject, closer: setShowSubjectModal, selected: selectedSubject }, // Uses filtered subjects!
             { visible: showYearModal, data: examYears, setter: setSelectedYear, closer: setShowYearModal, selected: selectedYear }
           ].map((modal, idx) => (
             <Modal key={idx} visible={modal.visible} transparent animationType="fade" onRequestClose={() => modal.closer(false)}>
@@ -252,7 +280,6 @@ export default function MarksEntryUI({
                 {/* MARKS INPUT WITH AUTO-CALCULATED GRADE */}
                 <View className="flex-row items-center justify-end">
                   
-                  {/* The Auto Calculated Grade Label */}
                   <View className="mr-3 w-8 items-center justify-center">
                     <Text className="text-[18px] font-black text-[#8f140e]">
                        {getOfficialGradeLetter(student.marks)}
