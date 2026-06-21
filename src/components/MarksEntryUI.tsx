@@ -41,45 +41,45 @@ export default function MarksEntryUI({
 
   const API_URL = `${process.env.EXPO_PUBLIC_API_URL}`;
 
-  // 1. Initial Load: Fetch Dropdowns
+  // Use dummy IDs to test roles according to your Seeder
+  // Class Incharge = Kamal (ID: 1), Subject Teacher = Nimali (ID: 2)
+  const currentTeacherId = userRole === "subject_teacher" ? 2 : userRole === "class_incharge" ? 1 : "";
+
   useEffect(() => {
     fetchFormData();
   }, []);
 
-  // 2. Fetch Students whenever ANY dropdown changes
   useEffect(() => {
+    // Clear students immediately when filters change to prevent ghost marks
+    setStudents([]); 
     if (selectedGrade && selectedTerm && selectedYear) {
       fetchStudents();
     }
   }, [selectedGrade, selectedTerm, selectedSubject, selectedYear]);
 
-  // CATEGORIZED SUBJECT ARRAYS (Based on your logic)
   const grade6to9Subjects = ['First Language (Sinhala/Tamil)', 'English Language', 'Mathematics', 'Science', 'History', 'Geography', 'Citizenship Education (Civics)', 'Religion', 'Aesthetic Subject (Art/Music/Dancing/Drama)', 'ICT', 'PTS'];
   const grade10to11Subjects = ['First Language (Sinhala/Tamil)', 'Mathematics', 'Science', 'English Language', 'History', 'Religion', 'Business & Accounting Studies', 'Geography', 'Citizenship Education (Civics)', 'Entrepreneurship Studies', 'Foreign Languages', 'Aesthetic Subject (Art/Music/Dancing/Drama)', 'ICT', 'Agriculture & Food Technology', 'Aquatic Bio-Resources Technology', 'Home Economics', 'Arts & Crafts', 'Mechanical/Electrical/Electronic Technology', 'Design & Technology', 'Media Studies', 'Logic'];
   const grade12to13Subjects = ['Combined Mathematics', 'Physics', 'Chemistry', 'Biology', 'Agricultural Science', 'Accounting', 'Business Studies', 'Economics', 'Science for Technology (SFT)', 'Engineering Technology', 'Bio-Systems Technology', 'Logic', 'Media Studies', 'Geography', 'Citizenship Education (Civics)', 'English Language', 'ICT'];
 
-  // Function to filter subjects based on the currently selected grade
   const getFilteredSubjects = () => {
     if (!selectedGrade) return subjects;
-    
-    // Extract the numeric grade from "Grade 6", "Grade 10" etc.
     const baseGrade = selectedGrade.base_grade || "";
     const num = parseInt(baseGrade.replace(/\D/g, ''));
     
-    if (num >= 6 && num <= 9) {
-      return subjects.filter(s => grade6to9Subjects.includes(s.name));
-    } else if (num === 10 || num === 11) {
-      return subjects.filter(s => grade10to11Subjects.includes(s.name));
-    } else if (num === 12 || num === 13) {
-      return subjects.filter(s => grade12to13Subjects.includes(s.name));
-    }
-    return subjects; // Fallback
+    if (num >= 6 && num <= 9) return subjects.filter(s => grade6to9Subjects.includes(s.name));
+    if (num === 10 || num === 11) return subjects.filter(s => grade10to11Subjects.includes(s.name));
+    if (num === 12 || num === 13) return subjects.filter(s => grade12to13Subjects.includes(s.name));
+    return subjects; 
   };
 
   const fetchStudents = async () => {
     try {
-      // Append selected IDs to the URL so the backend filters the marks
+      setStudents([]); 
+
       const queryParams = new URLSearchParams();
+      queryParams.append("role", userRole);
+      if (currentTeacherId) queryParams.append("teacher_id", currentTeacherId.toString());
+
       if (selectedGrade) queryParams.append("grade_id", selectedGrade.id);
       if (selectedTerm) queryParams.append("term_id", selectedTerm.id);
       if (selectedSubject) queryParams.append("subject_id", selectedSubject.id);
@@ -95,7 +95,11 @@ export default function MarksEntryUI({
 
   const fetchFormData = async () => {
     try {
-      const response = await fetch(`${API_URL}/form-data`);
+      const queryParams = new URLSearchParams();
+      queryParams.append("role", userRole);
+      if (currentTeacherId) queryParams.append("teacher_id", currentTeacherId.toString());
+
+      const response = await fetch(`${API_URL}/form-data?${queryParams.toString()}`);
       const json = await response.json();
 
       if (json.success) {
@@ -107,7 +111,10 @@ export default function MarksEntryUI({
         if (json.data.grades.length > 0) setSelectedGrade(json.data.grades[0]);
         if (json.data.terms.length > 0) setSelectedTerm(json.data.terms[0]);
         if (json.data.exam_years.length > 0) setSelectedYear(json.data.exam_years[0]);
-        // Note: Subject is deliberately NOT set automatically here, so it updates correctly on grade change
+        
+        if (json.data.subjects.length === 1) {
+            setSelectedSubject(json.data.subjects[0]);
+        }
       }
     } catch (error) {
       console.error("Error fetching form data:", error);
@@ -183,8 +190,12 @@ export default function MarksEntryUI({
       });
 
       const json = await response.json();
-      if (json.success) Alert.alert("Success", json.message, [{ text: "OK" }]);
-      else Alert.alert("Database Error", json.message);
+      if (json.success) {
+        Alert.alert("Success", json.message, [{ text: "OK" }]);
+        fetchStudents();
+      } else {
+        Alert.alert("Database Error", json.message);
+      }
     } catch (error) {
       Alert.alert("Connection Error", "Could not connect to the backend server.");
     }
@@ -221,18 +232,60 @@ export default function MarksEntryUI({
             </View>
           </View>
 
-          {/* Filters Card */}
           <View className="rounded-[32px] bg-white p-5 shadow-xl shadow-black/5 mb-6">
-            <DropdownField label="Class / Grade" value={selectedGrade ? selectedGrade.name : "Loading..."} onPress={() => setShowGradeModal(true)} />
-            <DropdownField label="Term" value={selectedTerm ? selectedTerm.name : "Loading..."} onPress={() => setShowTermModal(true)} />
-            <DropdownField label="Subject" value={selectedSubject ? selectedSubject.name : "Select a Subject"} onPress={() => setShowSubjectModal(true)} />
+            <DropdownField 
+              label="Class / Grade" 
+              value={selectedGrade ? selectedGrade.name : "Loading..."} 
+              onPress={() => setShowGradeModal(true)} 
+            />
+            
+            <DropdownField 
+              label="Term" 
+              value={selectedTerm ? selectedTerm.name : "Loading..."} 
+              onPress={() => setShowTermModal(true)} 
+            />
+            
+            <DropdownField 
+              label="Subject" 
+              value={selectedSubject ? selectedSubject.name : "Select a Subject"} 
+              onPress={() => {
+                // Admin and Class Incharge can select ANY subject
+                if (userRole === "admin" || userRole === "class_incharge") {
+                  setShowSubjectModal(true);
+                } 
+                // Subject teacher can only select if they have more than 1 subject
+                else if (userRole === "subject_teacher" && subjects.length > 1) {
+                  setShowSubjectModal(true);
+                } else {
+                  Alert.alert("Info", "You are only assigned to one subject.");
+                }
+              }} 
+            />
           </View>
 
           {/* Modal Setup */}
           {[
-            { visible: showGradeModal, data: grades, setter: (val: any) => { setSelectedGrade(val); setSelectedSubject(null); }, closer: setShowGradeModal, selected: selectedGrade },
+            { 
+              visible: showGradeModal, 
+              data: grades, 
+              setter: (val: any) => { 
+                setSelectedGrade(val); 
+                
+                // FIX: Only reset the subject if there are MULTIPLE subjects available.
+                // If there's only 1 subject (like Nimali's Math), KEEP IT SELECTED!
+                const currentFilteredSubjects = getFilteredSubjects();
+                if (currentFilteredSubjects.length > 1) {
+                  setSelectedSubject(null); 
+                } else if (currentFilteredSubjects.length === 1) {
+                  // Ensure it stays auto-selected
+                  setSelectedSubject(currentFilteredSubjects[0]);
+                }
+              }, 
+              closer: setShowGradeModal, 
+              selected: selectedGrade 
+            },
             { visible: showTermModal, data: terms, setter: setSelectedTerm, closer: setShowTermModal, selected: selectedTerm },
-            { visible: showSubjectModal, data: getFilteredSubjects(), setter: setSelectedSubject, closer: setShowSubjectModal, selected: selectedSubject }, // Uses filtered subjects!
+            { visible: showSubjectModal, data: getFilteredSubjects(), setter: setSelectedSubject, closer: setShowSubjectModal, selected: selectedSubject },
             { visible: showYearModal, data: examYears, setter: setSelectedYear, closer: setShowYearModal, selected: selectedYear }
           ].map((modal, idx) => (
             <Modal key={idx} visible={modal.visible} transparent animationType="fade" onRequestClose={() => modal.closer(false)}>
@@ -256,7 +309,6 @@ export default function MarksEntryUI({
             </Modal>
           ))}
 
-          {/* Class Roster Card */}
           <View className="rounded-[32px] bg-white p-5 shadow-xl shadow-black/5 mb-6">
             <View className="mb-6 h-12 flex-row items-center rounded-2xl bg-[#f7f5f2] px-4">
               <Feather name="search" size={18} color="#8e847f" />
@@ -277,7 +329,6 @@ export default function MarksEntryUI({
                   </View>
                 </View>
 
-                {/* MARKS INPUT WITH AUTO-CALCULATED GRADE */}
                 <View className="flex-row items-center justify-end">
                   
                   <View className="mr-3 w-8 items-center justify-center">
@@ -286,7 +337,8 @@ export default function MarksEntryUI({
                     </Text>
                   </View>
 
-                  {canEditMarks ? (
+                  {/* Edit allowed only if canEditMarks AND subject is selected */}
+                  {canEditMarks && selectedSubject ? (
                     <TextInput
                       value={student.marks}
                       onChangeText={(text) => handleUpdateMark(student.id, text)}
@@ -297,8 +349,8 @@ export default function MarksEntryUI({
                       className={`h-12 w-16 rounded-xl text-center text-[16px] font-bold ${student.marks ? "bg-[#fceeed] text-[#8f140e]" : "bg-[#f7f5f2] text-[#212121]"}`}
                     />
                   ) : (
-                    <View className={`h-12 w-16 rounded-xl items-center justify-center ${student.marks ? "bg-[#f7f5f2]" : "bg-transparent"}`}>
-                      <Text className={`text-[16px] font-bold ${student.marks ? "text-[#212121]" : "text-[#a5928a]"}`}>
+                    <View className="h-12 w-16 rounded-xl items-center justify-center bg-[#f0ebe6]">
+                      <Text className="text-[16px] font-bold text-[#a5928a]">
                         {student.marks ? student.marks : "-"}
                       </Text>
                     </View>
@@ -308,10 +360,14 @@ export default function MarksEntryUI({
             ))}
           </View>
 
-          {/* Action Buttons */}
           <View className="rounded-[32px] bg-white p-5 shadow-xl shadow-black/5 mb-6">
             {canEditMarks ? (
-              <Pressable onPress={handleSubmitMarks} className="h-14 items-center justify-center rounded-full bg-[#8f140e] shadow-lg shadow-[#8f140e]/30">
+              <Pressable 
+                onPress={handleSubmitMarks} 
+                disabled={!selectedSubject}
+                style={{ opacity: selectedSubject ? 1 : 0.5 }}
+                className="h-14 items-center justify-center rounded-full bg-[#8f140e] shadow-lg shadow-[#8f140e]/30"
+              >
                 <Text className="text-[16px] font-bold text-white">Submit Final Marks</Text>
               </Pressable>
             ) : isClassIncharge ? (
