@@ -1,6 +1,13 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import { FlatList, Pressable, StatusBar, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  StatusBar,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export type Notification = {
@@ -121,10 +128,22 @@ export default function NotificationsScreen() {
     );
   };
 
+  const clearAll = () => {
+    Alert.alert("Clear All", "Remove all notifications?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Clear",
+        style: "destructive",
+        onPress: () => setNotifications([]),
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]" edges={["top"]}>
       <StatusBar barStyle="dark-content" />
 
+      {/* Top Bar */}
       <View className="flex-row items-center justify-between px-4 pt-2 pb-3">
         <View className="flex-row items-center gap-2">
           <View className="w-9 h-9 rounded-full bg-[#e7e4e0] items-center justify-center">
@@ -156,8 +175,28 @@ export default function NotificationsScreen() {
               <Text className="text-[26px] font-black text-[#1a1a1a]">
                 Notifications
               </Text>
+              <Pressable
+                onPress={clearAll}
+                className="bg-[#e7e4e0] px-4 py-1.5 rounded-full"
+              >
+                <Text className="text-[12px] font-bold text-[#3a3a3a]">
+                  Clear All
+                </Text>
+              </Pressable>
             </View>
           </>
+        }
+        ListEmptyComponent={
+          <View className="items-center py-20">
+            <Ionicons
+              name="notifications-off-outline"
+              size={48}
+              color="#c0b4af"
+            />
+            <Text className="text-[14px] text-[#a5928a] mt-4 font-medium">
+              No notifications yet
+            </Text>
+          </View>
         }
         ListFooterComponent={
           notifications.length > 0 ? (
