@@ -1,34 +1,114 @@
-import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
+// app/(student)/(tabs)/dashboard.tsx
 
-export default function StudentDashboardScreen() {
+// ─── Types ───────────────────────────────────────────────────────────────────
 
-  useAuthGuard();
-  const router = useRouter();
+type QuickAction = {
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: string;
+  iconLib: "feather" | "material" | "ionicons";
+  route: string;
+};
 
-  const handleViewResults = () => {
-    // Screenshot eke thiyena latest-results file ekata point karanawa
-    router.push("/(student)/(tabs)/latest-results");
-  };
+type PerformanceItem = {
+  id: string;
+  subject: string;
+  course: string;
+  score: number;
+  total: number;
+  color: string;
+  bgColor: string;
+  symbol: string;
+};
 
-  return (
-    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center px-6 relative">
+type NotificationItem = {
+  id: string;
+  title: string;
+  body: string;
+  time: string;
+  read: boolean;
+};
 
-      <View className="items-center gap-8">
-        <Text className="text-2xl font-bold text-[#8f140e]">Student Dashboard</Text>
+// ─── Static Data ─────────────────────────────────────────────────────────────
 
-        <Pressable
-          onPress={handleViewResults}
-          className="bg-[#8f140e] px-8 py-4 rounded-2xl shadow-lg shadow-[#8f140e]/30 active:opacity-80"
-        >
-          <Text className="text-lg font-bold text-white">
-            View Latest Results
-          </Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
-  );
+const QUICK_ACTIONS: QuickAction[] = [
+  {
+    id: "marks",
+    title: "View Marks",
+    subtitle: "Detailed breakdown of current semester performance.",
+    icon: "star",
+    iconLib: "feather",
+    route: "/(student)/(tabs)/marks",
+  },
+  {
+    id: "profile",
+    title: "My Profile",
+    subtitle: "Manage your student credentials and preferences.",
+    icon: "account-circle-outline",
+    iconLib: "material",
+    route: "/(student)/(tabs)/profile",
+  },
+  {
+    id: "schedule",
+    title: "Class Schedule",
+    subtitle: "Check upcoming lectures, labs, and workshops.",
+    icon: "calendar",
+    iconLib: "feather",
+    route: "/(student)/(tabs)/latest-results",
+  },
+];
+
+const PERFORMANCE: PerformanceItem[] = [
+  {
+    id: "math",
+    subject: "Mathematics",
+    course: "Advanced Calculus II",
+    score: 95,
+    total: 100,
+    color: "#1a73e8",
+    bgColor: "#e8f0fe",
+    symbol: "Σ",
+  },
+  {
+    id: "chem",
+    subject: "Chemistry",
+    course: "Organic Chemistry Lab",
+    score: 91,
+    total: 100,
+    color: "#d93025",
+    bgColor: "#fce8e6",
+    symbol: "⚗",
+  },
+  {
+    id: "phys",
+    subject: "Physics",
+    course: "Quantum Mechanics",
+    score: 88,
+    total: 100,
+    color: "#f9ab00",
+    bgColor: "#fef7e0",
+    symbol: "⚡",
+  },
+];
+
+const NOTIFICATIONS: NotificationItem[] = [
+  {
+    id: "1",
+    title: "Physics Quiz Results",
+    body: 'Your results for "Weekly Quiz 08: Particle Physics" are now available. You scored higher than 83% of your peers.',
+    time: "3h ago",
+    read: false,
+  },
+  {
+    id: "2",
+    title: "School Holiday",
+    body: "Please note that the campus will be closed next Friday for the Annual Faculty Symposium. No lectures scheduled.",
+    time: "Yesterday",
+    read: true,
+  },
+];
+
+export default function DashboardScreen() {
+  return null;
 }
