@@ -1,5 +1,6 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Pressable, StatusBar, Text, View } from "react-native";
+import { useState } from "react";
+import { FlatList, Pressable, StatusBar, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export type Notification = {
@@ -46,7 +47,6 @@ export const INITIAL_NOTIFICATIONS: Notification[] = [
   },
 ];
 
-// ─── Notification Card Component ───────────────────────────
 const NotificationCard = ({
   item,
   onMarkRead,
@@ -94,7 +94,6 @@ const NotificationCard = ({
         <Text className="text-[12px] text-[#6f5f5a] leading-relaxed mt-1.5">
           {item.body}
         </Text>
-
         {!item.read && (
           <Pressable
             onPress={() => onMarkRead(item.id)}
@@ -112,6 +111,16 @@ const NotificationCard = ({
 );
 
 export default function NotificationsScreen() {
+  const [notifications, setNotifications] = useState<Notification[]>(
+    INITIAL_NOTIFICATIONS
+  );
+
+  const markAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+    );
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]" edges={["top"]}>
       <StatusBar barStyle="dark-content" />
@@ -130,13 +139,34 @@ export default function NotificationsScreen() {
         </View>
       </View>
 
-      {/* Preview card - static for now */}
-      <View className="px-4">
-        <NotificationCard
-          item={INITIAL_NOTIFICATIONS[0]}
-          onMarkRead={() => {}}
-        />
-      </View>
+      <FlatList
+        data={notifications}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <NotificationCard item={item} onMarkRead={markAsRead} />
+        )}
+        contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <>
+            <Text className="text-[9px] font-extrabold tracking-widest text-[#a5928a] uppercase mb-1 px-1">
+              Update Stream
+            </Text>
+            <View className="flex-row justify-between items-center mb-4 px-1">
+              <Text className="text-[26px] font-black text-[#1a1a1a]">
+                Notifications
+              </Text>
+            </View>
+          </>
+        }
+        ListFooterComponent={
+          notifications.length > 0 ? (
+            <Text className="text-center text-[12px] text-[#b0a8a3] py-4">
+              You've reached the end of your recent notifications.
+            </Text>
+          ) : null
+        }
+      />
     </SafeAreaView>
   );
 }
