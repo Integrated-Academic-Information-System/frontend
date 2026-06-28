@@ -163,7 +163,7 @@ export default function MarksViewScreen() {
           </View>
 
           {/* GPA CARD */}
-          <View className="mt-7 bg-[#8f140e] rounded-[26px] p-5">
+          <View className="mt-7 bg-[#8f140e] rounded-[26px] p-5 mb-20">
             <Text className="text-[#f3dada] text-[11px] tracking-[1px]">
               TERM PERFORMANCE
             </Text>
