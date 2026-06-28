@@ -50,6 +50,7 @@ export default function Index() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Accept': 'application/json',
         },
         body: JSON.stringify({
           //Make as a json
@@ -62,7 +63,7 @@ export default function Index() {
 
       // If login failed
       if (!response.ok) {
-        Alert.alert("Login Failed", data.message);
+        Alert.alert("Login Failed", 'Invalid user name or password!');
         return;
       }
 
