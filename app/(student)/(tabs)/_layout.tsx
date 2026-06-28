@@ -12,19 +12,13 @@ const TabIcon = ({ focused, iconName, label, IconType }: any) => {
     <View
       className={`items-center justify-center rounded-full ${
         focused
-          ? "bg-[#8f140e] px-3 py-2"
-          : ""
+          ? "bg-[#8f140e] px-3 py-1.5 h-[52px] min-w-[64px]"
+          : "h-12 min-w-[50px]"
       }`}
-
-      style={{
-        minWidth: focused ? 80 : 44,
-        height: 48,
-      }}
-
     >
       <IconType
         name={iconName}
-        size={22}
+        size={focused ? 20 : 24}
         color={focused ? "#ffffff" : "#8e847f"}
       />
       <Text
