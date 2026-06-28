@@ -76,17 +76,14 @@ export default function Index() {
 
       if (userName?.toLowerCase().includes("admin")) {
         router.replace("/(admin)/(tabs)/dashboard");
-        console.log(data.token);
       }else if (userName?.toLowerCase().includes("reg")) {
         router.replace("/(student)/(tabs)/dashboard");
-        console.log(data.token);
       }else if (userName?.toLowerCase().includes("teacher")) {
         if(teacherStatus === "0"){
           router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
         }else if(teacherStatus === "1"){
           router.replace("/(teacher)/(tabs)/class-incharge/dashboard");
         }
-        console.log(data.token);
       }else{
         Alert.alert("You can not login!");
         return;
