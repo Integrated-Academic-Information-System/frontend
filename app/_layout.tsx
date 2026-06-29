@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
-import { router, Slot } from "expo-router";
+import { router } from "expo-router";
 
 export default function RootLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -26,7 +26,7 @@ export default function RootLayout() {
         }
         if (token) {
           setIsLoggedIn(true);
-          setUserRole((role as "admin" | "student" | "teacher") || "admin");
+          setUserRole((role as "admin" | "student" | "teacher") || null);
         } else {
           setIsLoggedIn(false);
         }
@@ -51,6 +51,7 @@ export default function RootLayout() {
       >
         {isLoggedIn ? (
           <>
+            <Stack.Screen name="role-selector" />
             {/* Route to appropriate role-based navigation */}
             {userRole === "admin" && <Stack.Screen name="(admin)" />}
             {userRole === "student" && <Stack.Screen name="(student)" />}
