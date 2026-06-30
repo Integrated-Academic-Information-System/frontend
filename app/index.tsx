@@ -1,10 +1,9 @@
-//index.tsx
-
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -18,6 +17,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -34,13 +34,69 @@ export default function Index() {
 
   const handleSignIn = async () => {
     try {
-      // Save dummy auth token to AsyncStorage
-      await AsyncStorage.setItem("authToken", "dev_token_" + Date.now());
-      
-      // Navigate to our temporary development role selector
-      router.replace("/role-selector"); 
+      const trimmedUsername = username.trim();
+
+      if (!trimmedUsername || !password) {
+        Alert.alert(
+          "Missing Credentials",
+          "Please enter both username/email and password.",
+        );
+        return;
+      }
+
+      // Sends the entered username and password from your React Native app
+      // to the Laravel backend login API using a POST request.
+      const response = await fetch(process.env.EXPO_PUBLIC_API_URL + "/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          //Make as a json
+          user_name: trimmedUsername,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      // If login failed
+      if (!response.ok) {
+        Alert.alert("Login Failed", 'Invalid user name or password!');
+        return;
+      }
+
+      // Save real token from backend
+      await AsyncStorage.setItem("authToken", data.token);
+      await AsyncStorage.setItem("userName", data.user_name);
+      await AsyncStorage.setItem("teacherStatus", String(data.teacher_status));
+
+      const userName = await AsyncStorage.getItem("userName");
+      const teacherStatus = await AsyncStorage.getItem("teacherStatus");
+
+      if (userName?.toLowerCase().includes("admin")) {
+        router.replace("/(admin)/(tabs)/dashboard");
+      }else if (userName?.toLowerCase().includes("reg")) {
+        router.replace("/(student)/(tabs)/dashboard");
+      }else if (userName?.toLowerCase().includes("teacher")) {
+        if(teacherStatus === "0"){
+          router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
+        }else if(teacherStatus === "1"){
+          router.replace("/(teacher)/(tabs)/class-incharge/dashboard");
+        }
+      }else{
+        Alert.alert("You can not login!");
+        return;
+      }
+
+      // Move into the post-login flow so success is visible to the user.
     } catch (error) {
       console.error("Login error:", error);
+      Alert.alert(
+        "Login Error",
+        "Unable to sign in. Please check the backend URL and network connection.",
+      );
     }
   };
 

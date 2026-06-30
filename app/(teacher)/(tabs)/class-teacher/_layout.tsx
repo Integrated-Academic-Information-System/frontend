@@ -1,11 +1,7 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Platform, Text, View, ActivityIndicator } from "react-native";
-import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router, Slot } from "expo-router";
+import { Platform, Text, View } from "react-native";
 
-// Reusable component for Tab Icons
 const TabIcon = ({ focused, iconName, label, IconType }: any) => {
   return (
     <View
@@ -31,36 +27,7 @@ const TabIcon = ({ focused, iconName, label, IconType }: any) => {
   );
 };
 
-export default function TeacherTabsLayout() {
-  const [checking, setChecking] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = await AsyncStorage.getItem("authToken");
-      // const userName = await AsyncStorage.getItem("userName");
-
-      const isAuthenticated = !!token;
-
-      if (!isAuthenticated) {
-        router.replace("/");
-        return;
-      }
-
-      setChecking(false);
-    };
-
-    checkAuth();
-  }, []);
-
-  // Show a loader while checking
-  if (checking) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
+export default function ClassTeacherTabsLayout() {
   return (
     <Tabs
       screenOptions={{
@@ -85,7 +52,6 @@ export default function TeacherTabsLayout() {
         },
       }}
     >
-      {/* 1. Dashboard Tab */}
       <Tabs.Screen
         name="dashboard"
         options={{
@@ -100,7 +66,6 @@ export default function TeacherTabsLayout() {
         }}
       />
 
-      {/* 2. Students Tab */}
       <Tabs.Screen
         name="students"
         options={{
@@ -115,7 +80,6 @@ export default function TeacherTabsLayout() {
         }}
       />
 
-      {/* 3. Marks Entry Tab */}
       <Tabs.Screen
         name="marks-entry"
         options={{
@@ -123,14 +87,13 @@ export default function TeacherTabsLayout() {
             <TabIcon
               focused={focused}
               iconName="book-open-variant"
-              label="Subjects"
+              label="Marks"
               IconType={MaterialCommunityIcons}
             />
           ),
         }}
       />
 
-      {/* 4. Alerts Tab */}
       <Tabs.Screen
         name="alerts"
         options={{
