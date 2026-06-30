@@ -20,6 +20,8 @@ interface AdminAlert {
 }
 
 export default function AlertsScreen() {
+  useAuthGuard();
+
   const [activeFilter, setActiveFilter] = useState<"all" | "critical" | "warning" | "info">("all");
 
   // Mock array containing contextual system messages
@@ -171,14 +173,6 @@ export default function AlertsScreen() {
           )}
         </View>
       </ScrollView>
-=======
-
-  useAuthGuard();
-
-  return (
-    
-    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
-      <Text className="text-2xl font-bold text-[#8f140e]">Alerts</Text>
     </SafeAreaView>
   );
 }
