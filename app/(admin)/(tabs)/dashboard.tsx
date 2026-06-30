@@ -2,15 +2,16 @@ import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function DashboardScreen() {
-
   useAuthGuard();
-
+  
    const [activeFilter, setActiveFilter] = useState<
       "all" | "critical" | "warning" | "info"
     >("all");
+  
   const router = useRouter();
 
   const totalStudents = 1284;
@@ -21,6 +22,9 @@ export default function DashboardScreen() {
   };
 
   return (
+    
+    <SafeAreaView className="flex-1 bg-[#efeae4] px-6">
+      <View className="flex-1 items-center justify-center gap-8">
     <SafeAreaView
       className="flex-1 bg-[#F9F9F9]"
       edges={["top", "left", "right"]}
@@ -49,7 +53,7 @@ export default function DashboardScreen() {
         <View className="mt-4 mb-6">
           <Text className="text-2xl font-extrabold text-zinc-900 tracking-tight">
             Hello, Admin!
-=======
+
     <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center px-6 relative">
       {/* <Pressable 
         onPress={() => router.replace("/role-selector")}
@@ -60,6 +64,7 @@ export default function DashboardScreen() {
       </Pressable> */}
 
       <View className="items-center gap-8">
+
         <Text className="text-2xl font-bold text-[#8f140e]">Dashboard</Text>
 
         <Pressable
