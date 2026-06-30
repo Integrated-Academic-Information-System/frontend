@@ -1,5 +1,7 @@
 // MarksEntryUI.tsx
 import { Feather } from "@expo/vector-icons";
+import * as WebBrowser from "expo-web-browser";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -224,6 +226,15 @@ export default function MarksEntryUI({
   };
 
   const handleSubmitMarks = async () => {
+    console.log("Submitting marks...");
+    console.log("Payload being sent:", JSON.stringify({
+        exam_year_id: selectedYear?.id,
+        term_id: selectedTerm?.id,
+        grade_id: selectedGrade?.id,
+        subject_id: selectedSubject?.id,
+        marks_data: students.filter((s) => s.marks !== undefined && s.marks !== "").map((s) => ({ student_id: s.id, mark: s.marks })),
+    }, null, 2));
+    
     try {
       const studentsWithMarks = students
         .filter((s) => s.marks !== undefined && s.marks !== "")
@@ -247,9 +258,15 @@ export default function MarksEntryUI({
         marks_data: studentsWithMarks,
       };
 
+      const token = await AsyncStorage.getItem("authToken");
+
       const response = await fetch(`${API_URL}/save-marks`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(payload),
       });
 
@@ -265,8 +282,18 @@ export default function MarksEntryUI({
     }
   };
 
-  const handleGenerateReport = () => {
-    Alert.alert("Report Generated", "Class report has been successfully generated.", [{ text: "OK" }]);
+  const handleGenerateReport = async () => {
+    if (!selectedGrade || !selectedSubject) {
+      Alert.alert("Error", "Please select a Grade and Subject.");
+      return;
+    }
+
+    // Backend API endpoint
+    const url = `${API_URL}/generate-report?grade_id=${selectedGrade.id}&subject_id=${selectedSubject.id}&exam_year_id=${selectedYear.id}&term_id=${selectedTerm.id}`;
+
+    // Open the URL in the browser.
+    // The browser will trigger the report download automatically.
+    await WebBrowser.openBrowserAsync(url);
   };
 
   return (
@@ -359,7 +386,7 @@ export default function MarksEntryUI({
                   </View>
 
                   {canEditMarks && selectedSubject ? (
-                    <TextInput value={student.marks} onChangeText={(text) => handleUpdateMark(student.id, text)} placeholder="-" placeholderTextColor="#a5928a" keyboardType="number-pad" maxLength={3} className={`h-12 w-16 rounded-xl text-center text-[16px] font-bold ${student.marks ? "bg-[#fceeed] text-[#8f140e]" : "bg-[#f7f5f2] text-[#212121]"}`} />
+                    <TextInput value={student.marks ?? ""} onChangeText={(text) => handleUpdateMark(student.id, text)} placeholder="-" placeholderTextColor="#a5928a" keyboardType="number-pad" maxLength={3} className={`h-12 w-16 rounded-xl text-center text-[16px] font-bold ${student.marks ? "bg-[#fceeed] text-[#8f140e]" : "bg-[#f7f5f2] text-[#212121]"}`} />
                   ) : (
                     <View className="h-12 w-16 rounded-xl items-center justify-center bg-[#f0ebe6]">
                       <Text className="text-[16px] font-bold text-[#a5928a]">{student.marks ? student.marks : "-"}</Text>
