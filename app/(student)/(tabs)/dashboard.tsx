@@ -148,10 +148,7 @@ export default function DashboardScreen() {
     loadUser();
   }, []);
 
-  const handleLogout = async () => {
-    await AsyncStorage.multiRemove(["authToken", "userName", "teacherStatus"]);
-    router.replace("/");
-  };
+
 
   const initials = userName
     .split(/[\s._-]/)
@@ -185,14 +182,7 @@ export default function DashboardScreen() {
               </Text>
             </View>
           </View>
-          <Pressable
-            onPress={handleLogout}
-            className="bg-[#fdf0f0] px-4 py-2 rounded-full"
-          >
-            <Text style={{ fontSize: 12, fontWeight: "700", color: "#8f140e" }}>
-              Logout
-            </Text>
-          </Pressable>
+
         </View>
 
         {/* ── Hero Academic Standing Card ── */}
