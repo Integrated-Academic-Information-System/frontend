@@ -2,6 +2,7 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function SubjectTeacherDashboard() {
@@ -14,9 +15,8 @@ export default function SubjectTeacherDashboard() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center px-6 relative">
-
-      <View className="items-center gap-8">
+    <SafeAreaView className="flex-1 bg-[#efeae4] px-6">
+      <View className="flex-1 items-center justify-center gap-8">
         <Text className="text-2xl font-bold text-[#8f140e]">Subject Teacher</Text>
 
         <Pressable

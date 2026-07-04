@@ -1,7 +1,7 @@
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -23,6 +23,11 @@ export default function Index() {
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState<"English" | "Sinhala">("English");
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    setCheckingAuth(false);
+  }, []);
 
   const handleClearForm = () => {
     setUsername("");
@@ -71,21 +76,35 @@ export default function Index() {
       await AsyncStorage.setItem("authToken", data.token);
       await AsyncStorage.setItem("userName", data.user_name);
       await AsyncStorage.setItem("teacherStatus", String(data.teacher_status));
+      if (data.teacher_id !== undefined && data.teacher_id !== null) {
+        await AsyncStorage.setItem("teacherId", String(data.teacher_id));
+      }
 
-      const userName = await AsyncStorage.getItem("userName");
-      const teacherStatus = await AsyncStorage.getItem("teacherStatus");
+      const userName = data.user_name;
+      const teacherStatus = String(data.teacher_status);
 
       if (userName?.toLowerCase().includes("admin")) {
+        await AsyncStorage.setItem("userRole", "admin");
         router.replace("/(admin)/(tabs)/dashboard");
-      }else if (userName?.toLowerCase().includes("reg")) {
+
+      } else if (userName?.toLowerCase().includes("reg")) {
+        await AsyncStorage.setItem("userRole", "student");
         router.replace("/(student)/(tabs)/dashboard");
-      }else if (userName?.toLowerCase().includes("teacher")) {
-        if(teacherStatus === "0"){
+
+      } else if (
+        userName?.toLowerCase().includes("teacher") ||
+        userName?.toLowerCase().includes("ct_")
+      ) {
+        await AsyncStorage.setItem("userRole", "teacher");
+        if (teacherStatus === "0") {
           router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
-        }else if(teacherStatus === "1"){
+        } else if (teacherStatus === "1") {
           router.replace("/(teacher)/(tabs)/class-incharge/dashboard");
+        } else {
+          Alert.alert("Invalid Teacher Role");
         }
-      }else{
+
+      } else {
         Alert.alert("You can not login!");
         return;
       }
@@ -99,6 +118,14 @@ export default function Index() {
       );
     }
   };
+
+  if (checkingAuth) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
+        <StatusBar barStyle="dark-content" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]">
