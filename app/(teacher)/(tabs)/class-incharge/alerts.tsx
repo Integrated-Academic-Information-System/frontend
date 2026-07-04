@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const initialAlerts = [
   {
@@ -33,6 +34,8 @@ const initialAlerts = [
 ];
 
 export default function ClassInchargeAlertsScreen() {
+
+  useAuthGuard();
   const router = useRouter();
   const [alerts, setAlerts] = useState(initialAlerts);
   const [composerOpen, setComposerOpen] = useState(false);

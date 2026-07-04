@@ -13,6 +13,7 @@ import {
   getClassTeacherProfile,
 } from "../../../../src/lib/classTeacherProfile";
 import { useFocusEffect } from "@react-navigation/native";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const quickActions = [
   {
@@ -41,6 +42,8 @@ const quickActions = [
 const initialStudentCount = 3;
 
 export default function ClassInchargeDashboard() {
+  useAuthGuard();
+
   const router = useRouter();
   const [studentCount, setStudentCount] = useState(initialStudentCount);
   const [teacherName, setTeacherName] = useState("Username");

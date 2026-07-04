@@ -18,6 +18,7 @@ import {
   DEFAULT_CLASS_NAME,
   getClassTeacherProfile,
 } from "../../../../src/lib/classTeacherProfile";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const initialStudents: ClassTeacherStudent[] = [
   { name: "Aarav Perera", grade: "Grade 10 - A", roll: "01" },
@@ -26,6 +27,9 @@ const initialStudents: ClassTeacherStudent[] = [
 ];
 
 export default function ClassInchargeStudentsScreen() {
+
+  useAuthGuard
+
   const [addedStudents, setAddedStudents] = useState<ClassTeacherStudent[]>([]);
   const [composerOpen, setComposerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");

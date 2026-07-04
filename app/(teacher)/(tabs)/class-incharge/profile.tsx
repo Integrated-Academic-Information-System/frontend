@@ -1,7 +1,9 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function ProfileScreen() {
+  useAuthGuard();
   const user = {
     name: "John Doe",
     role: "Administrator",
