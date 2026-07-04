@@ -86,14 +86,20 @@ export default function AdminTabsLayout() {
 
   useEffect(() => {
     const checkAuth = async () => {
+      console.log("=== ADMIN LAYOUT checkAuth RUNNING ===");
       const token = await AsyncStorage.getItem("authToken");
       const userName = await AsyncStorage.getItem("userName");
+      console.log("token:", token, "userName:", userName);
 
       const isAuthenticated = !!token;
       const isAdmin = userName?.toLowerCase().includes("admin");
 
       if (!isAuthenticated || !isAdmin) {
-        router.replace("/");
+        if (typeof window !== "undefined") {
+          window.location.href = "/";
+        } else {
+          router.replace("/");
+        }
         return;
       }
 
@@ -115,7 +121,11 @@ export default function AdminTabsLayout() {
       console.log("Logout request failed:", e);
     } finally {
       await AsyncStorage.multiRemove(["authToken", "userName"]);
-      router.replace("/");
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      } else {
+        router.replace("/");
+      }
     }
   };
 
