@@ -1,18 +1,3 @@
-/*import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
-
-export default function StudentsScreen() {
-
-useAuthGuard();
-
-  return (
-    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
-      <Text className="text-2xl font-bold text-[#8f140e]">Students</Text>
-    </SafeAreaView>
-  );
-}*/
-
 import { Feather, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -86,28 +71,6 @@ export default function StudentsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]" edges={['top', 'left', 'right']}>
       
-      {/* --- Header Profile Bar --- */}
-      <View className="flex-row justify-between items-center px-6 pt-4 pb-4">
-        <View className="flex-row items-center gap-3">
-          <Pressable className="p-1">
-            <Feather name="menu" size={22} color="#8f140e" />
-          </Pressable>
-          <Text className="text-[#8f140e] font-bold text-base">Mr. Saman Kumara</Text>
-        </View>
-        
-        {/* Profile Silhouette Border */}
-        {/* Blended Back Button using your original navigation logic */}
-    
-        <View className="h-9 w-9 rounded-full bg-gray-300 overflow-hidden border-2 border-white shadow-sm">
-          <Image
-            source={{ uri: "https://i.pravatar.cc/100?img=11" }}
-            style={{ width: "100%", height: "100%" }}
-            className="h-full w-full"
-          />
-        </View>
-      
-      </View>
-
       {/* --- Main Contents Scroll Frame --- */}
       <ScrollView className="flex-1 px-6" contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
         
