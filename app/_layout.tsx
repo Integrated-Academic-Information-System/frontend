@@ -8,12 +8,15 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <Stack
         screenOptions={{
-          headerShown: false, // disable for ALL screens
+          headerShown: false,
         }}
       >
         <Stack.Screen name="index" />
-
-
+        <Stack.Screen name="(admin)/(tabs)" />
+        <Stack.Screen name="(student)/(tabs)" />
+        <Stack.Screen name="(teacher)/(tabs)/index" />
+        <Stack.Screen name="(teacher)/(tabs)/class-incharge" />
+        <Stack.Screen name="(teacher)/(tabs)/subject-teacher" />
       </Stack>
     </SafeAreaProvider>
   );
