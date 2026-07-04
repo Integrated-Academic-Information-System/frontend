@@ -32,17 +32,7 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#F9F9F9]" edges={["top", "left", "right"]}>
       <View className="flex-1">
-        <View className="flex-row items-center justify-between bg-[#F9F9F9] px-6 pb-4 pt-4">
-          <Text className="text-lg font-bold text-[#8f140e]">Admin</Text>
-          <View className="h-9 w-9 overflow-hidden rounded-full border-2 border-white bg-gray-300 shadow-sm">
-            <Image
-              source={{ uri: "https://i.pravatar.cc/100?img=11" }}
-              style={{ width: "100%", height: "100%" }}
-              className="h-full w-full"
-            />
-          </View>
-        </View>
-
+        
         <ScrollView
           className="flex-1 px-6"
           contentContainerStyle={{ paddingBottom: 100 }}
