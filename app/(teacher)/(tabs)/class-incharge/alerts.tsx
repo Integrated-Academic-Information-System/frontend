@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const initialAlerts = [
   {
@@ -33,6 +34,8 @@ const initialAlerts = [
 ];
 
 export default function ClassInchargeAlertsScreen() {
+
+  useAuthGuard();
   const router = useRouter();
   const [alerts, setAlerts] = useState(initialAlerts);
   const [composerOpen, setComposerOpen] = useState(false);
@@ -80,26 +83,15 @@ export default function ClassInchargeAlertsScreen() {
     <SafeAreaView className="flex-1 bg-[#efeae4]">
       <ScrollView contentContainerClassName="px-6 pb-32 pt-4">
         <View className="flex-row items-center justify-between mb-6">
-          <Pressable
-            onPress={() => router.back()}
-            className="flex-row items-center bg-white px-3 py-2 rounded-full shadow-sm active:opacity-70"
-          >
-            <Feather name="arrow-left" size={18} color="#8f140e" />
-            <Text className="ml-2 text-[14px] font-bold text-[#8f140e]">
-              Back
-            </Text>
-          </Pressable>
-
-          <View className="h-12 w-12 rounded-full bg-[#8f140e] items-center justify-center">
-            <Feather name="bell" size={20} color="#fff" />
+          <View className="items-center justify-center">
+            <Text className="text-xl text-black font-bold uppercase tracking-[4px]">
+            Class Alerts
+          </Text>
           </View>
         </View>
 
         <View className="bg-[#8f140e] rounded-[28px] p-6 mb-5 shadow-lg shadow-[#8f140e]/20">
-          <Text className="text-[12px] font-semibold text-white/75 uppercase tracking-[4px]">
-            Class Alerts
-          </Text>
-          <Text className="text-[30px] font-extrabold text-white mt-2 leading-tight">
+          <Text className="text-[20px] font-extrabold text-white mt-2 leading-tight">
             Keep track of class updates
           </Text>
           <Text className="text-white/80 mt-3 text-[14px] leading-5">

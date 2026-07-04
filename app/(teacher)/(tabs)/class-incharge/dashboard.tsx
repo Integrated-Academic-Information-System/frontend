@@ -13,6 +13,7 @@ import {
   getClassTeacherProfile,
 } from "../../../../src/lib/classTeacherProfile";
 import { useFocusEffect } from "@react-navigation/native";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const quickActions = [
   {
@@ -41,6 +42,8 @@ const quickActions = [
 const initialStudentCount = 3;
 
 export default function ClassInchargeDashboard() {
+  useAuthGuard();
+
   const router = useRouter();
   const [studentCount, setStudentCount] = useState(initialStudentCount);
   const [teacherName, setTeacherName] = useState("Username");
@@ -78,7 +81,6 @@ export default function ClassInchargeDashboard() {
     <SafeAreaView className="flex-1 bg-[#efeae4]">
       <ScrollView contentContainerClassName="px-6 pb-32 pt-4">
         <View className="flex-row items-center justify-between mb-6">
-
 
           <View className="flex-row items-center gap-3 rounded-full bg-white px-4 py-2 shadow-sm">
             <View className="h-10 w-10 rounded-full bg-[#8f140e] items-center justify-center">

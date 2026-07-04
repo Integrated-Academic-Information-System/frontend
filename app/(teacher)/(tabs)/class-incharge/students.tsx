@@ -18,6 +18,7 @@ import {
   DEFAULT_CLASS_NAME,
   getClassTeacherProfile,
 } from "../../../../src/lib/classTeacherProfile";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const initialStudents: ClassTeacherStudent[] = [
   { name: "Aarav Perera", grade: "Grade 10 - A", roll: "01" },
@@ -26,6 +27,9 @@ const initialStudents: ClassTeacherStudent[] = [
 ];
 
 export default function ClassInchargeStudentsScreen() {
+
+  useAuthGuard
+
   const [addedStudents, setAddedStudents] = useState<ClassTeacherStudent[]>([]);
   const [composerOpen, setComposerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
@@ -89,25 +93,6 @@ export default function ClassInchargeStudentsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]">
       <ScrollView contentContainerClassName="px-6 pb-32 pt-4">
-        <View className="flex-row items-center justify-between mb-6">
-          <View className="h-12 w-12 rounded-full bg-[#8f140e] items-center justify-center">
-            <Feather name="users" size={20} color="#fff" />
-          </View>
-
-          <View className="flex-row items-center gap-3 rounded-full bg-white px-4 py-2 shadow-sm">
-            <View className="h-10 w-10 rounded-full bg-[#8f140e] items-center justify-center">
-              <Feather name="user" size={18} color="#fff" />
-            </View>
-            <View>
-              <Text className="text-[12px] font-semibold text-[#8f140e] uppercase tracking-wider">
-                {teacherName}
-              </Text>
-              <Text className="text-[12px] font-medium text-[#8e847f]">
-                {className}
-              </Text>
-            </View>
-          </View>
-        </View>
 
         <View className="flex-row items-center justify-between mb-5 gap-2">
           <View className="flex-row bg-white rounded-full p-1 shadow-sm">

@@ -49,32 +49,32 @@ const MENU_ITEMS = [
   },
   {
     label: "Dashboard",
-    route: "/admin/dashboard",
+    route: "/dashboard",
     icon: "view-dashboard-outline",
     IconType: MaterialCommunityIcons,
   },
   {
     label: "Performance",
-    route: "/admin/performance",
+    route: "/performance",
     icon: "trending-up",
     IconType: Feather,
   },
   { label: "Alerts", route: "/admin/alerts", icon: "bell", IconType: Feather },
   {
     label: "Analytics",
-    route: "/admin/analytics",
+    route: "/analytics",
     icon: "bar-chart-2",
     IconType: Feather,
   },
   {
     label: "Accounts",
-    route: "/admin/accounts",
+    route: "/accounts",
     icon: "user",
     IconType: Feather,
   },
   {
     label: "Curriculum",
-    route: "/admin/curriculum",
+    route: "/curriculum",
     icon: "book-open-variant",
     IconType: MaterialCommunityIcons,
   },
@@ -86,10 +86,8 @@ export default function AdminTabsLayout() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      console.log("=== ADMIN LAYOUT checkAuth RUNNING ===");
       const token = await AsyncStorage.getItem("authToken");
       const userName = await AsyncStorage.getItem("userName");
-      console.log("token:", token, "userName:", userName);
 
       const isAuthenticated = !!token;
       const isAdmin = userName?.toLowerCase().includes("admin");

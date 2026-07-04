@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useStudentProfile } from "@/hooks/useStudentProfile";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function StudentProfileScreen() {
+  useAuthGuard();
   const { profile, loading, error, refetch } = useStudentProfile(); // ← call the hook
 
   // Loading state

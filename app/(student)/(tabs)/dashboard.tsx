@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -137,6 +138,9 @@ const ActionIcon = ({
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
+
+  useAuthGuard();
+
   const router = useRouter();
   const [userName, setUserName] = useState("Student");
 
