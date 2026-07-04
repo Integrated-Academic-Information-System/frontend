@@ -1,5 +1,5 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import { useState } from "react";
 import { 
   Pressable, 
   ScrollView, 
@@ -20,8 +20,7 @@ interface AdminAlert {
 }
 
 export default function AlertsScreen() {
-  useAuthGuard();
-
+  
   const [activeFilter, setActiveFilter] = useState<"all" | "critical" | "warning" | "info">("all");
 
   // Mock array containing contextual system messages
