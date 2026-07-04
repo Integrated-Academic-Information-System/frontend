@@ -302,13 +302,6 @@ export default function MarksEntryUI({
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView className="flex-1" contentContainerClassName="px-4 pb-12 pt-2 md:px-8 lg:px-12" showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
-          <View className="flex-row items-center justify-between mb-4 px-1">
-            <View className="flex-row items-center bg-white px-3 py-1.5 rounded-full shadow-sm shadow-black/5">
-              <Image source={require("../../assets/images/school-logo.png")} style={{ width: 24, height: 24, borderRadius: 12 }} />
-              <Text className="ml-2 text-[14px] font-bold text-[#8f140e]">{roleDisplayName}</Text>
-            </View>
-          </View>
-
           <View className="mb-6 px-1">
             <Text className="text-[28px] font-extrabold text-[#212121]">Marks Entry</Text>
             <View className="flex-row items-center mt-2">
