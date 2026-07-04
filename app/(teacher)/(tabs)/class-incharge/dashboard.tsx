@@ -79,7 +79,6 @@ export default function ClassInchargeDashboard() {
       <ScrollView contentContainerClassName="px-6 pb-32 pt-4">
         <View className="flex-row items-center justify-between mb-6">
 
-
           <View className="flex-row items-center gap-3 rounded-full bg-white px-4 py-2 shadow-sm">
             <View className="h-10 w-10 rounded-full bg-[#8f140e] items-center justify-center">
               <Feather name="user" size={18} color="#fff" />
