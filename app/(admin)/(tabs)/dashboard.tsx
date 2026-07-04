@@ -1,21 +1,16 @@
-import { Feather, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import {
-  Image,
   Pressable,
   ScrollView,
   Text,
   View,
-  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function DashboardScreen() {
-  useAuthGuard();
-
+  
   const [activeFilter, setActiveFilter] = useState<
     "all" | "critical" | "warning" | "info"
   >("all");
