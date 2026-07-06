@@ -55,7 +55,7 @@ export default function Index() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Accept': 'application/json',
+          Accept: "application/json",
         },
         body: JSON.stringify({
           //Make as a json
@@ -68,16 +68,27 @@ export default function Index() {
 
       // If login failed
       if (!response.ok) {
-        Alert.alert("Login Failed", 'Invalid user name or password!');
+        Alert.alert("Login Failed", "Invalid user name or password!");
         return;
       }
 
       // Save real token from backend
-      await AsyncStorage.setItem("authToken", data.token);
-      await AsyncStorage.setItem("userName", data.user_name);
-      await AsyncStorage.setItem("teacherStatus", String(data.teacher_status));
-      if (data.teacher_id !== undefined && data.teacher_id !== null) {
-        await AsyncStorage.setItem("teacherId", String(data.teacher_id));
+      await AsyncStorage.setItem("authToken", data.token); 
+
+      if (data.teacher_id !== undefined) {
+        // Teacher-specific keys
+        await AsyncStorage.setItem("teacher_name", data.name ?? "");
+        await AsyncStorage.setItem("teacher_username", data.user_name ?? "");
+        await AsyncStorage.setItem("teacher_email", data.email ?? "");
+        await AsyncStorage.setItem("teacher_mobile", data.mobile_number ?? "");
+        await AsyncStorage.setItem(
+          "teacher_status",
+          String(data.teacher_status),
+        );
+        await AsyncStorage.setItem("teacher_id", String(data.teacher_id));
+      } else if (data.user_name?.toLowerCase().includes("reg")) {
+        // Student-specific keys
+        await AsyncStorage.setItem("userName", data.user_name);
       }
 
       const userName = data.user_name;
@@ -86,11 +97,9 @@ export default function Index() {
       if (userName?.toLowerCase().includes("admin")) {
         await AsyncStorage.setItem("userRole", "admin");
         router.replace("/(admin)/(tabs)/dashboard");
-
       } else if (userName?.toLowerCase().includes("reg")) {
         await AsyncStorage.setItem("userRole", "student");
         router.replace("/(student)/(tabs)/dashboard");
-
       } else if (
         userName?.toLowerCase().includes("teacher") ||
         userName?.toLowerCase().includes("ct_")
@@ -103,7 +112,6 @@ export default function Index() {
         } else {
           Alert.alert("Invalid Teacher Role");
         }
-
       } else {
         Alert.alert("You can not login!");
         return;
