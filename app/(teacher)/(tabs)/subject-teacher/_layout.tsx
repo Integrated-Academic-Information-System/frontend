@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, Slot } from "expo-router";
+import { useTeacherProfile } from "@/hooks/useTeacherProfile";
 
 // Reusable component for Tab Icons
 const TabIcon = ({ focused, iconName, label, IconType }: any) => {
@@ -72,7 +73,7 @@ const MENU_ITEMS = [
 export default function TeacherTabsLayout() {
   const [checking, setChecking] = useState(true);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [profile, setProfile] = useState<{ name?: string } | null>(null);
+  const { profile } = useTeacherProfile();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -111,6 +112,10 @@ export default function TeacherTabsLayout() {
       }
     }
   };
+
+  const avatarUri = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    profile?.name ?? "User",
+  )}&size=200&background=8f140e&color=fff&bold=true&rounded=false`;
 
   const handleMenuItemPress = (route: string) => {
     setMenuVisible(false);
@@ -167,16 +172,14 @@ export default function TeacherTabsLayout() {
             }}
           >
             <Image
-              source={{
-                uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name ?? "User")}&size=200&background=8f140e&color=fff&bold=true&rounded=false`,
-              }}
-              style={{
-                width: 42,
-                height: 42,
-                borderRadius: 21,
-                backgroundColor: "#2c3036",
-              }}
-            />
+                source={{ uri: avatarUri }}
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 21,
+                  backgroundColor: "#2c3036",
+                }}
+              />
           </TouchableOpacity>
         ),
         tabBarShowLabel: false,
