@@ -1,45 +1,46 @@
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
+  View,
+  Text,
   ScrollView,
   StatusBar,
-  Text,
+  Pressable,
   TextInput,
-  View
+  Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Mock Data for subjects matching the layout
 const SUBJECTS_DATA = [
   {
     id: "1",
-    name: "Mathematics",
+    name: "Advanced Mathematics",
     teacher: "Dr. Aris Thorne",
-    score: "98/100",
+    score: "38/40",
     icon: "sigma",
   },
   {
     id: "2",
-    name: "Science",
+    name: "Quantum Physics",
     teacher: "Prof. Selina Kyle",
-    score: "92/100",
+    score: "35/40",
     icon: "atom",
   },
   {
     id: "3",
-    name: "History",
+    name: "Global History II",
     teacher: "Mr. Arthur Pendragon",
-    score: "78/100",
+    score: "32/40",
     icon: "book-open-variant",
   },
   {
     id: "4",
-    name: "English",
+    name: "Microeconomics",
     teacher: "Ms. Clara Prince",
-    score: "39/100",
+    score: "39/40",
     icon: "chart-timeline-variant",
   },
 ];
