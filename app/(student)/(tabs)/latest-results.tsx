@@ -39,7 +39,7 @@ const SUBJECTS_DATA = [
     id: "4",
     name: "English",
     teacher: "Ms. Clara Prince",
-    score: "65/100",
+    score: "39/100",
     icon: "chart-timeline-variant",
   },
 ];
@@ -85,7 +85,7 @@ export default function ResultsDashboard() {
               {/* WELCOME TITLE ROW */}
               <View className="mt-10">
                 <Text className="text-[12px] font-bold tracking-[1.8px] text-[#6f5f5a] uppercase">
-                  Academic Session 2026/27
+                  Academic Session 2023/24
                 </Text>
                 <Text className="text-[32px] font-extrabold leading-[38px] text-[#212121] mt-2">
                   Academic Results
@@ -110,7 +110,7 @@ export default function ResultsDashboard() {
                 <View className="bg-[#fcfbfa] border border-[#f0ebe6] rounded-[24px] p-4 flex-row justify-between items-center">
                   <View className="flex-1">
                     <Text className="text-[11px] font-bold text-[#a58e86] uppercase tracking-[1px]">
-                      Term Average
+                      Term GPA
                     </Text>
                     <View className="flex-row items-baseline gap-0.5 mt-1">
                       <Text className="text-[28px] font-black text-[#212121]">3.82</Text>
@@ -131,7 +131,7 @@ export default function ResultsDashboard() {
                     </Text>
                     <View className="flex-row items-baseline gap-0.5 mt-1">
                       <Text className="text-[28px] font-black text-[#212121]">04</Text>
-                      <Text className="text-[14px] font-medium text-[#a58e86]">of 25</Text>
+                      <Text className="text-[14px] font-medium text-[#a58e86]">of 124</Text>
                     </View>
                     <View className="w-full h-1.5 bg-[#e7e4e0] rounded-full mt-3 overflow-hidden">
                       <View className="w-[90%] h-full bg-[#ffca28]" />
