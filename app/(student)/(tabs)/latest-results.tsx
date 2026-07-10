@@ -1,46 +1,45 @@
-import React, { useState } from "react";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
 import {
-  View,
-  Text,
-  ScrollView,
-  StatusBar,
-  Pressable,
-  TextInput,
-  Image,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Mock Data for subjects matching the layout
 const SUBJECTS_DATA = [
   {
     id: "1",
-    name: "Advanced Mathematics",
+    name: "Mathematics",
     teacher: "Dr. Aris Thorne",
-    score: "38/40",
+    score: "98/100",
     icon: "sigma",
   },
   {
     id: "2",
-    name: "Quantum Physics",
+    name: "Science",
     teacher: "Prof. Selina Kyle",
-    score: "35/40",
+    score: "92/100",
     icon: "atom",
   },
   {
     id: "3",
-    name: "Global History II",
+    name: "History",
     teacher: "Mr. Arthur Pendragon",
-    score: "32/40",
+    score: "78/100",
     icon: "book-open-variant",
   },
   {
     id: "4",
-    name: "Microeconomics",
+    name: "English",
     teacher: "Ms. Clara Prince",
-    score: "39/40",
+    score: "65/100",
     icon: "chart-timeline-variant",
   },
 ];
@@ -86,7 +85,7 @@ export default function ResultsDashboard() {
               {/* WELCOME TITLE ROW */}
               <View className="mt-10">
                 <Text className="text-[12px] font-bold tracking-[1.8px] text-[#6f5f5a] uppercase">
-                  Academic Session 2023/24
+                  Academic Session 2026/27
                 </Text>
                 <Text className="text-[32px] font-extrabold leading-[38px] text-[#212121] mt-2">
                   Academic Results
@@ -111,7 +110,7 @@ export default function ResultsDashboard() {
                 <View className="bg-[#fcfbfa] border border-[#f0ebe6] rounded-[24px] p-4 flex-row justify-between items-center">
                   <View className="flex-1">
                     <Text className="text-[11px] font-bold text-[#a58e86] uppercase tracking-[1px]">
-                      Term GPA
+                      Term Average
                     </Text>
                     <View className="flex-row items-baseline gap-0.5 mt-1">
                       <Text className="text-[28px] font-black text-[#212121]">3.82</Text>
@@ -132,7 +131,7 @@ export default function ResultsDashboard() {
                     </Text>
                     <View className="flex-row items-baseline gap-0.5 mt-1">
                       <Text className="text-[28px] font-black text-[#212121]">04</Text>
-                      <Text className="text-[14px] font-medium text-[#a58e86]">of 124</Text>
+                      <Text className="text-[14px] font-medium text-[#a58e86]">of 25</Text>
                     </View>
                     <View className="w-full h-1.5 bg-[#e7e4e0] rounded-full mt-3 overflow-hidden">
                       <View className="w-[90%] h-full bg-[#ffca28]" />
