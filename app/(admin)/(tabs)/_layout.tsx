@@ -87,7 +87,7 @@ export default function AdminTabsLayout() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem("authToken");
-      const userName = await AsyncStorage.getItem("userName");
+      const userName = await AsyncStorage.getItem("userRole");
 
       const isAuthenticated = !!token;
       const isAdmin = userName?.toLowerCase().includes("admin");
