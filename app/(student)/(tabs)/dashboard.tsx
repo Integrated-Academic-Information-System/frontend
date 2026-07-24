@@ -71,6 +71,7 @@ const ActionIcon = ({
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
+  
   useAuthGuard();
 
   const router = useRouter();
