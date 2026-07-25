@@ -8,7 +8,7 @@ export default function TeacherHomeScreen() {
     const redirect = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-        const teacherStatus = await AsyncStorage.getItem("teacherStatus");
+        const teacherStatus = await AsyncStorage.getItem("teacher_status");
 
         if (!token) {
           router.replace("/");
