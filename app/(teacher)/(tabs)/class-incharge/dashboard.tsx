@@ -1,17 +1,9 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
 import { useRouter } from "expo-router";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  getClassTeacherStudents,
-  ClassTeacherStudent,
-} from "../../../../src/lib/classTeacherStudents";
-import {
-  DEFAULT_CLASS_NAME,
-  getClassTeacherProfile,
-} from "../../../../src/lib/classTeacherProfile";
 import { useFocusEffect } from "@react-navigation/native";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 
@@ -39,29 +31,65 @@ const quickActions = [
   },
 ];
 
-const initialStudentCount = 3;
+interface AssignedSubject {
+  subject_id: number;
+  subject_name: string;
+  grade_id: number;
+  grade_name: string;
+}
+
+interface ClassOverview {
+  class_name: string;
+  student_count: number;
+  assigned_subjects: AssignedSubject[];
+}
 
 export default function ClassInchargeDashboard() {
   useAuthGuard();
 
   const router = useRouter();
-  const [studentCount, setStudentCount] = useState(initialStudentCount);
   const [teacherName, setTeacherName] = useState("Username");
-  const [className, setClassName] = useState(DEFAULT_CLASS_NAME);
+  const [overview, setOverview] = useState<ClassOverview | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
       const loadDashboardData = async () => {
-        const storedStudents: ClassTeacherStudent[] =
-          await getClassTeacherStudents();
-        const profile = await getClassTeacherProfile();
+        try {
+          setLoading(true);
+          const [token, name] = await AsyncStorage.multiGet([
+            "authToken",
+            "teacher_name",
+          ]);
 
-        if (isActive) {
-          setStudentCount(initialStudentCount + storedStudents.length);
-          setTeacherName(profile.teacherName);
-          setClassName(profile.className);
+          const response = await fetch(
+            `${process.env.EXPO_PUBLIC_API_URL}/teacher/class/overview`,
+            {
+              headers: {
+                Authorization: `Bearer ${token[1]}`,
+                Accept: "application/json",
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (isActive) {
+            if (data.success) {
+              setOverview({
+                class_name: data.class_name,
+                student_count: data.student_count,
+                assigned_subjects: data.assigned_subjects ?? [],
+              });
+            }
+            setTeacherName(name[1] ?? "Username");
+          }
+        } catch (e) {
+          console.log("Failed to load class overview:", e);
+        } finally {
+          if (isActive) setLoading(false);
         }
       };
 
@@ -74,14 +102,17 @@ export default function ClassInchargeDashboard() {
   );
 
   const stats = [
-    { label: "Students", value: String(studentCount), accent: "#8f140e" },
+    {
+      label: "Students",
+      value: overview ? String(overview.student_count) : "-",
+      accent: "#8f140e",
+    },
   ];
 
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]">
       <ScrollView contentContainerClassName="px-6 pb-32 pt-4">
         <View className="flex-row items-center justify-between mb-6">
-
           <View className="flex-row items-center gap-3 rounded-full bg-white px-4 py-2 shadow-sm">
             <View className="h-10 w-10 rounded-full bg-[#8f140e] items-center justify-center">
               <Feather name="user" size={18} color="#fff" />
@@ -91,7 +122,7 @@ export default function ClassInchargeDashboard() {
                 {teacherName}
               </Text>
               <Text className="text-[12px] font-medium text-[#8e847f]">
-                {className}
+                {overview?.class_name ?? "Loading..."}
               </Text>
             </View>
           </View>
@@ -127,6 +158,48 @@ export default function ClassInchargeDashboard() {
             </View>
           ))}
         </View>
+
+        {/* Assigned Subjects Section */}
+        <Text className="text-[18px] font-bold text-[#212121] mb-3">
+          Assigned Subjects
+        </Text>
+
+        {loading ? (
+          <View className="bg-white rounded-3xl p-6 mb-6 items-center shadow-sm">
+            <ActivityIndicator color="#8f140e" />
+          </View>
+        ) : overview && overview.assigned_subjects.length > 0 ? (
+          <View className="gap-3 mb-6">
+            {overview.assigned_subjects.map((subject) => (
+              <View
+                key={`${subject.subject_id}-${subject.grade_id}`}
+                className="bg-white rounded-[20px] p-4 flex-row items-center shadow-sm"
+              >
+                <View className="h-11 w-11 rounded-2xl bg-[#fceeed] items-center justify-center mr-4">
+                  <MaterialCommunityIcons
+                    name="book-open-page-variant-outline"
+                    size={20}
+                    color="#8f140e"
+                  />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-[15px] font-bold text-[#212121]">
+                    {subject.subject_name}
+                  </Text>
+                  <Text className="text-[12px] text-[#8e847f] mt-0.5">
+                    {subject.grade_name}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View className="bg-white rounded-3xl p-6 mb-6 items-center shadow-sm">
+            <Text className="text-[13px] text-[#8e847f]">
+              No subjects assigned yet
+            </Text>
+          </View>
+        )}
 
         <Text className="text-[18px] font-bold text-[#212121] mb-3">
           Quick Actions
