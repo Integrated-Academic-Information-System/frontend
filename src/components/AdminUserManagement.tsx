@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -695,6 +695,18 @@ function ModalShell({
   children: React.ReactNode;
   footer?: React.ReactNode;
 }) {
+  const scrollViewRef = useRef<ScrollView | null>(null);
+
+  useEffect(() => {
+    if (!visible) return;
+
+    const timer = setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [visible]);
+
   return (
     <Modal
       visible={visible}
@@ -707,7 +719,7 @@ function ModalShell({
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <View className="bg-[#efeae4] rounded-t-[32px] px-5 pt-5 pb-6 max-h-[92%]">
+          <View className="bg-[#efeae4] rounded-t-[32px] px-5 pt-5 pb-6 max-h-[92%] flex-1 overflow-hidden">
             <View className="flex-row items-center justify-between mb-4">
               <Text className="text-[22px] font-extrabold text-[#212121]">
                 {title}
@@ -719,10 +731,19 @@ function ModalShell({
                 <Feather name="x" size={18} color="#8f140e" />
               </Pressable>
             </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              ref={scrollViewRef}
+              className="flex-1"
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled
+              contentContainerStyle={{
+                paddingBottom: footer ? 32 : 24,
+              }}
+            >
               {children}
             </ScrollView>
-            {footer ? <View className="pt-4">{footer}</View> : null}
+            {footer ? <View className="pt-4 shrink-0">{footer}</View> : null}
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -1006,11 +1027,11 @@ function StudentFormModal({
 
   const submit = async () => {
     const trimmedName = fullName.trim();
-    const trimmedUsername = username.trim();
+    const trimmedRegNo = username.trim();
     const trimmedPassword = password.trim();
 
-    if (!trimmedName || !trimmedUsername || !selectedGradeId) {
-      setFieldError("Full name, username, and class are required.");
+    if (!trimmedName || !trimmedRegNo || !selectedGradeId) {
+      setFieldError("Full name, registration number, and class are required.");
       return;
     }
 
@@ -1022,7 +1043,7 @@ function StudentFormModal({
     const payload: Record<string, any> = {
       full_name: trimmedName,
       name: trimmedName,
-      username: trimmedUsername,
+      reg_no: trimmedRegNo,
       grade_id: selectedGradeId,
       class_id: selectedGradeId,
       class_name: selectedGradeName,
