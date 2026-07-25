@@ -1,33 +1,33 @@
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    Pressable,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-    AdminGradeRecord,
-    AdminSubjectRecord,
-    AdminUserRecord,
-    changeAdminUserPassword,
-    createAdminStudent,
-    createAdminTeacher,
-    deleteAdminUser,
-    getAdminGradeSubjects,
-    getAdminGrades,
-    getAdminUserDetails,
-    getAdminUsers,
-    updateAdminStudent,
-    updateAdminTeacher,
+  AdminGradeRecord,
+  AdminSubjectRecord,
+  AdminUserRecord,
+  changeAdminUserPassword,
+  createAdminStudent,
+  createAdminTeacher,
+  deleteAdminUser,
+  getAdminGradeSubjects,
+  getAdminGrades,
+  getAdminUserDetails,
+  getAdminUsers,
+  updateAdminStudent,
+  updateAdminTeacher,
 } from "../lib/adminUsers";
 
 type FilterKey =
@@ -1203,6 +1203,7 @@ function TeacherFormModal({
 }) {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [classTeacher, setClassTeacher] = useState(false);
   const [subjectTeacher, setSubjectTeacher] = useState(false);
@@ -1227,6 +1228,7 @@ function TeacherFormModal({
       : { classTeacher: false, subjectTeacher: false };
     setFullName(user?.name ?? "");
     setUsername(user?.username ?? "");
+    setEmail(user?.email ?? "");
     setPassword("");
     setClassTeacher(
       flags.classTeacher ||
@@ -1314,10 +1316,17 @@ function TeacherFormModal({
   const submit = async () => {
     const trimmedName = fullName.trim();
     const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!trimmedName || !trimmedUsername) {
-      setFieldError("Full name and username are required.");
+    if (!trimmedName || !trimmedUsername || !trimmedEmail) {
+      setFieldError("Full name, username, and email are required.");
+      return;
+    }
+
+    if (!emailPattern.test(trimmedEmail)) {
+      setFieldError("Please enter a valid email address.");
       return;
     }
 
@@ -1353,19 +1362,30 @@ function TeacherFormModal({
     const payload: Record<string, any> = {
       full_name: trimmedName,
       name: trimmedName,
+      user_name: trimmedUsername,
       username: trimmedUsername,
-      roles: [
-        ...(classTeacher ? ["class_teacher"] : []),
-        ...(subjectTeacher ? ["subject_teacher"] : []),
-      ],
+      email: trimmedEmail,
       teacher_roles: [
         ...(classTeacher ? ["class_teacher"] : []),
         ...(subjectTeacher ? ["subject_teacher"] : []),
       ],
+      is_class_teacher: classTeacher,
+      is_subject_teacher: subjectTeacher,
       class_teacher_grade_id: classTeacher ? classTeacherGradeId : null,
       class_teacher_class_id: classTeacher ? classTeacherGradeId : null,
+      class_id: classTeacher ? classTeacherGradeId : null,
       subject_teacher_subject_id: subjectTeacher ? subjectId : null,
       subject_teacher_class_ids: subjectTeacher ? subjectClassIds : [],
+      subject_id: subjectTeacher ? subjectId : null,
+      class_ids: subjectTeacher ? subjectClassIds : [],
+      subject_assignments: subjectTeacher
+        ? [
+            {
+              subject_id: subjectId,
+              grade_ids: subjectClassIds,
+            },
+          ]
+        : [],
       subject_teacher_class_names: subjectTeacher
         ? grades
             .filter((grade) => subjectClassIds.includes(grade.id))
@@ -1442,6 +1462,15 @@ function TeacherFormModal({
               value={username}
               onChangeText={setUsername}
               placeholder="Enter username"
+            />
+          </View>
+          <View>
+            <FormLabel>Email</FormLabel>
+            <FormInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="teacher@example.com"
+              keyboardType="email-address"
             />
           </View>
           <View>

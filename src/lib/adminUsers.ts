@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API_BASE = (process.env.EXPO_PUBLIC_API_URL ?? "").replace(/\/$/, "");
-const ADMIN_API_BASE = `${API_BASE}/api`;
+const ADMIN_API_ROOT = API_BASE.replace(/\/api$/, "");
+const ADMIN_API_BASE = `${ADMIN_API_ROOT}/api`;
 
 export interface AdminGradeRecord {
   id: string;
