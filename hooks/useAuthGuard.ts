@@ -11,15 +11,15 @@ export const useAuthGuard = (requiredStatus?: string) => {
       try {
         const token = await AsyncStorage.getItem("authToken");
         const role = await AsyncStorage.getItem("userRole");
-        const tId = await AsyncStorage.getItem("teacherId");
-        const teacherStatus = await AsyncStorage.getItem("teacherStatus");
+        const tId = await AsyncStorage.getItem("teacher_id");
+        const teacherStatus = await AsyncStorage.getItem("teacher_status");
         const userName = await AsyncStorage.getItem("userName");
 
         const logoutAndRedirect = async () => {
           await AsyncStorage.multiRemove([
             "authToken",
             "userName",
-            "teacherStatus",
+            "teacher_status",
             "teacherId",
             "userRole",
           ]);
