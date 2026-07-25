@@ -3,16 +3,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  View,
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StatusBar,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -73,38 +73,46 @@ export default function Index() {
       }
 
       // Save real token from backend
-      await AsyncStorage.setItem("authToken", data.token); 
+      await AsyncStorage.setItem("authToken", data.token);
 
-      if (data.teacher_id !== undefined) {
+      const teacherId = data.teacher_id;
+      const teacherStatus =
+        data.teacher_status !== undefined && data.teacher_status !== null
+          ? String(data.teacher_status)
+          : "";
+      const userName = data.user_name ?? "";
+      const isTeacher = teacherId !== undefined && teacherId !== null;
+      const isAdmin = userName.toLowerCase().includes("admin");
+      const isStudent = userName.toLowerCase().includes("reg");
+
+      if (isTeacher) {
         // Teacher-specific keys
-        await AsyncStorage.setItem("teacher_name", data.name ?? "");
-        await AsyncStorage.setItem("teacher_username", data.user_name ?? "");
-        await AsyncStorage.setItem("teacher_email", data.email ?? "");
-        await AsyncStorage.setItem("teacher_mobile", data.mobile_number ?? "");
-        await AsyncStorage.setItem(
-          "teacher_status",
-          String(data.teacher_status),
-        );
-        await AsyncStorage.setItem("teacher_id", String(data.teacher_id));
-      } else if (data.user_name?.toLowerCase().includes("reg")) {
+        await AsyncStorage.multiSet([
+          ["teacher_name", data.name ?? ""],
+          ["teacher_username", data.user_name ?? ""],
+          ["teacher_email", data.email ?? ""],
+          ["teacher_mobile", data.mobile_number ?? ""],
+          ["teacher_status", teacherStatus],
+          ["teacherStatus", teacherStatus],
+          ["teacher_id", String(teacherId)],
+          ["teacherId", String(teacherId)],
+          ["userRole", "teacher"],
+        ]);
+      } else if (isStudent) {
         // Student-specific keys
-        await AsyncStorage.setItem("userName", data.user_name);
+        await AsyncStorage.multiSet([
+          ["userName", data.user_name ?? ""],
+          ["userRole", "student"],
+        ]);
+      } else if (isAdmin) {
+        await AsyncStorage.setItem("userRole", "admin");
       }
 
-      const userName = data.user_name;
-      const teacherStatus = String(data.teacher_status);
-
-      if (userName?.toLowerCase().includes("admin")) {
-        await AsyncStorage.setItem("userRole", "admin");
+      if (isAdmin) {
         router.replace("/(admin)/(tabs)/dashboard");
-      } else if (userName?.toLowerCase().includes("reg")) {
-        await AsyncStorage.setItem("userRole", "student");
+      } else if (isStudent) {
         router.replace("/(student)/(tabs)/dashboard");
-      } else if (
-        userName?.toLowerCase().includes("teacher") ||
-        userName?.toLowerCase().includes("ct_")
-      ) {
-        await AsyncStorage.setItem("userRole", "teacher");
+      } else if (isTeacher) {
         if (teacherStatus === "0") {
           router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
         } else if (teacherStatus === "1") {

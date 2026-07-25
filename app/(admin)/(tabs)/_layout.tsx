@@ -3,14 +3,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Image,
-  Modal,
-  Platform,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Image,
+    Modal,
+    Platform,
+    Pressable,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 // Reusable component for Tab Icons
@@ -42,7 +42,7 @@ const TabIcon = ({ focused, iconName, label, IconType }: any) => {
 // Menu items for the hamburger drawer
 const MENU_ITEMS = [
   {
-    label: "Student Management",
+    label: "User Management",
     route: "/admin/students",
     icon: "users",
     IconType: Feather,

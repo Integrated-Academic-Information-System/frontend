@@ -1,16 +1,10 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DashboardScreen() {
-  
   const [activeFilter, setActiveFilter] = useState<
     "all" | "critical" | "warning" | "info"
   >("all");
@@ -24,10 +18,16 @@ export default function DashboardScreen() {
     router.push("/(admin)/(tabs)/marks-entry");
   };
 
+  const handleUserManagement = () => {
+    router.push("/(admin)/(tabs)/students");
+  };
+
   return (
-    <SafeAreaView className="flex-1 bg-[#F9F9F9]" edges={["top", "left", "right"]}>
+    <SafeAreaView
+      className="flex-1 bg-[#F9F9F9]"
+      edges={["top", "left", "right"]}
+    >
       <View className="flex-1">
-        
         <ScrollView
           className="flex-1 px-6"
           contentContainerStyle={{ paddingBottom: 100 }}
@@ -49,7 +49,9 @@ export default function DashboardScreen() {
               onPress={handleMarksEntry}
               className="rounded-2xl bg-[#8f140e] px-8 py-4 shadow-lg shadow-[#8f140e]/30 active:opacity-80"
             >
-              <Text className="text-lg font-bold text-white">Go to Marks Entry</Text>
+              <Text className="text-lg font-bold text-white">
+                Go to Marks Entry
+              </Text>
             </Pressable>
           </View>
 
@@ -73,7 +75,9 @@ export default function DashboardScreen() {
                 <Text className="mb-1 text-xs font-bold uppercase tracking-wider text-zinc-400">
                   Subjects
                 </Text>
-                <Text className="text-3xl font-black text-[#8f140e]">{totalSubjects}</Text>
+                <Text className="text-3xl font-black text-[#8f140e]">
+                  {totalSubjects}
+                </Text>
               </View>
               <View className="rounded-xl bg-[#8f140e]/10 p-3">
                 <FontAwesome5 name="book-open" size={18} color="#8f140e" />
@@ -99,7 +103,10 @@ export default function DashboardScreen() {
               </Pressable>
             </View>
 
-            <Pressable className="w-full items-center justify-center rounded-2xl bg-zinc-200 py-3.5 active:opacity-80">
+            <Pressable
+              onPress={handleUserManagement}
+              className="w-full items-center justify-center rounded-2xl bg-zinc-200 py-3.5 active:opacity-80"
+            >
               <Text className="text-base font-bold tracking-wide text-zinc-700">
                 User Management
               </Text>
