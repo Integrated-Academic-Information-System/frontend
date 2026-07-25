@@ -278,7 +278,13 @@ export function normalizeAdminUser(item: any): AdminUserRecord {
 
 export async function getAdminUsers() {
   const payload = await requestAdmin("/admin/users");
-  return asArray(payload).map(normalizeAdminUser);
+  const users = asArray(payload).map(normalizeAdminUser);
+  const seen = new Set<string>();
+  return users.filter((user) => {
+    if (!user.id || seen.has(user.id)) return false;
+    seen.add(user.id);
+    return true;
+  });
 }
 
 export async function getAdminGrades() {

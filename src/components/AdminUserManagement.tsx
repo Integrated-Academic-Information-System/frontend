@@ -811,7 +811,7 @@ function UserDetailsModal({
                 </Text>
                 <View className="flex-row flex-wrap gap-2">
                   {safeArray(user.subjectNames).length > 0 ? (
-                    user.subjectNames.map((subject) => (
+                    Array.from(new Set(safeArray(user.subjectNames))).map((subject) => (
                       <View
                         key={subject}
                         className="rounded-full bg-[#fceeed] px-3 py-2 border border-[#f5c3bd]"

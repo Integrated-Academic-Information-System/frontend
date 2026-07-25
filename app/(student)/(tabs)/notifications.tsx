@@ -141,6 +141,10 @@ export default function NotificationsScreen() {
     ]);
   };
 
+  const uniqueNotifications = notifications.filter(
+    (item, index, self) => self.findIndex((n) => n.id === item.id) === index
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]" edges={["top"]}>
       <StatusBar barStyle="dark-content" />
@@ -161,8 +165,8 @@ export default function NotificationsScreen() {
       </View>
 
       <FlatList
-        data={notifications}
-        keyExtractor={(item) => item.id}
+        data={uniqueNotifications}
+        keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => (
           <NotificationCard item={item} onMarkRead={markAsRead} />
         )}

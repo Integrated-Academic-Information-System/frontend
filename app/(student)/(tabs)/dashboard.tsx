@@ -286,9 +286,14 @@ export default function DashboardScreen() {
               No notifications yet.
             </Text>
           ) : (
-            data.notifications.map((notif) => (
-              <Pressable
-                key={notif.id}
+            data.notifications
+              .filter(
+                (notif, index, self) =>
+                  self.findIndex((n) => n.id === notif.id) === index
+              )
+              .map((notif) => (
+                <Pressable
+                  key={notif.id}
                 onPress={() => router.push("/(student)/(tabs)/notifications" as any)}
                 className="bg-white rounded-2xl p-4 mb-2.5"
                 style={({ pressed }) => ({
