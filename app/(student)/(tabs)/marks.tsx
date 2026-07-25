@@ -1,7 +1,6 @@
-// app/(student)/(tabs)/marks.tsx
-
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView, StatusBar, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -67,15 +66,139 @@ const SUBJECT_OPTIONS = [
 ];
 
 const TERM_OPTIONS = [
-  "1st Term",
-  "2nd Term",
-  "3rd Term",
+  "Fall 2024",
+  "Spring 2024",
+  "Fall 2023",
+  "Spring 2023",
 ];
+
+// ─── Dropdown Component ───────────────────────────────────────────────────────
+
+const Dropdown = ({
+  label,
+  value,
+  options,
+  open,
+  onToggle,
+  onSelect,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  open: boolean;
+  onToggle: () => void;
+  onSelect: (opt: string) => void;
+}) => (
+  <View style={{ marginBottom: 16 }}>
+    <Text
+      style={{
+        fontSize: 11,
+        fontWeight: "800",
+        color: "#6f5f5a",
+        letterSpacing: 0.5,
+        marginBottom: 8,
+      }}
+    >
+      {label}
+    </Text>
+    <Pressable
+      onPress={onToggle}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        backgroundColor: "#f5f2ee",
+        borderRadius: 16,
+        paddingHorizontal: 16,
+        height: 48,
+      }}
+    >
+      <Text style={{ fontSize: 14, color: "#2d2d2d", fontWeight: "600" }}>
+        {value}
+      </Text>
+      <Feather
+        name={open ? "chevron-up" : "chevron-down"}
+        size={16}
+        color="#a5928a"
+      />
+    </Pressable>
+    {open && (
+      <View
+        style={{
+          backgroundColor: "#fff",
+          borderRadius: 16,
+          marginTop: 4,
+          overflow: "hidden",
+          borderWidth: 0.5,
+          borderColor: "#f0ebe6",
+        }}
+      >
+        {options.map((opt, i) => (
+          <Pressable
+            key={opt}
+            onPress={() => onSelect(opt)}
+            style={{
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderTopWidth: i === 0 ? 0 : 0.5,
+              borderColor: "#f0ebe6",
+              backgroundColor: value === opt ? "#fdf0f0" : "#fff",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                color: value === opt ? "#8f140e" : "#2d2d2d",
+                fontWeight: value === opt ? "700" : "400",
+              }}
+            >
+              {opt}
+            </Text>
+            {value === opt && (
+              <Feather name="check" size={14} color="#8f140e" />
+            )}
+          </Pressable>
+        ))}
+      </View>
+    )}
+  </View>
+);
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function MarksScreen() {
   const router = useRouter();
+
+  const [selectedSubject, setSelectedSubject] = useState("All Subjects");
+  const [selectedTerm, setSelectedTerm] = useState("Fall 2024");
+  const [showSubjectDropdown, setShowSubjectDropdown] = useState(false);
+  const [showTermDropdown, setShowTermDropdown] = useState(false);
+  const [results, setResults] = useState<Subject[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleViewResults = () => {
+    let filtered = ALL_SUBJECTS;
+    if (selectedSubject !== "All Subjects") {
+      filtered = filtered.filter((s) =>
+        s.department.toLowerCase().includes(selectedSubject.toLowerCase())
+      );
+    }
+    filtered = filtered.filter((s) => s.term === selectedTerm);
+    setResults(filtered);
+    setHasSearched(true);
+    setShowSubjectDropdown(false);
+    setShowTermDropdown(false);
+  };
+
+  const handleBack = () => {
+    setResults([]);
+    setHasSearched(false);
+    setSelectedSubject("All Subjects");
+    setSelectedTerm("Fall 2024");
+  };
 
   return (
     <SafeAreaView
@@ -146,6 +269,101 @@ export default function MarksScreen() {
           <Text style={{ fontSize: 30, fontWeight: "900", color: "#1a1a1a" }}>
             Marks View
           </Text>
+        </View>
+
+        {/* ── Filter Card ── */}
+        <View
+          style={{
+            marginHorizontal: 16,
+            backgroundColor: "#fff",
+            borderRadius: 22,
+            padding: 20,
+            marginBottom: 16,
+            borderWidth: 0.5,
+            borderColor: "#f0ebe6",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "800",
+              color: "#1a1a1a",
+              marginBottom: 16,
+            }}
+          >
+            Filter Results
+          </Text>
+
+          <Dropdown
+            label="Subject"
+            value={selectedSubject}
+            options={SUBJECT_OPTIONS}
+            open={showSubjectDropdown}
+            onToggle={() => {
+              setShowSubjectDropdown(!showSubjectDropdown);
+              setShowTermDropdown(false);
+            }}
+            onSelect={(opt) => {
+              setSelectedSubject(opt);
+              setShowSubjectDropdown(false);
+            }}
+          />
+
+          <Dropdown
+            label="Term"
+            value={selectedTerm}
+            options={TERM_OPTIONS}
+            open={showTermDropdown}
+            onToggle={() => {
+              setShowTermDropdown(!showTermDropdown);
+              setShowSubjectDropdown(false);
+            }}
+            onSelect={(opt) => {
+              setSelectedTerm(opt);
+              setShowTermDropdown(false);
+            }}
+          />
+
+          {/* ── Action Buttons ── */}
+          <View style={{ flexDirection: "row", gap: 12, marginTop: 4 }}>
+            <Pressable
+              onPress={handleBack}
+              style={({ pressed }) => ({
+                flex: 1,
+                height: 52,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 50,
+                backgroundColor: "#e7e4e0",
+                opacity: pressed ? 0.8 : 1,
+              })}
+            >
+              <Text
+                style={{ fontSize: 15, fontWeight: "700", color: "#3a3a3a" }}
+              >
+                Back
+              </Text>
+            </Pressable>
+
+            <Pressable
+              onPress={handleViewResults}
+              style={({ pressed }) => ({
+                flex: 1,
+                height: 52,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 50,
+                backgroundColor: "#8f140e",
+                opacity: pressed ? 0.85 : 1,
+              })}
+            >
+              <Text
+                style={{ fontSize: 15, fontWeight: "700", color: "#fff" }}
+              >
+                View Results
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
