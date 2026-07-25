@@ -1,5 +1,3 @@
-// app/(student)/(tabs)/marks.tsx
-
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -68,10 +66,9 @@ const SUBJECT_OPTIONS = [
 ];
 
 const TERM_OPTIONS = [
-  "Fall 2024",
-  "Spring 2024",
-  "Fall 2023",
-  "Spring 2023",
+  "1st Term",
+  "2nd Term",
+  "3rd Term",
 ];
 
 // ─── Grade Color Helper ───────────────────────────────────────────────────────
