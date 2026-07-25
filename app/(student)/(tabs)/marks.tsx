@@ -1,3 +1,5 @@
+// app/(student)/(tabs)/marks.tsx
+
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -314,6 +316,8 @@ export default function MarksScreen() {
   const [results, setResults] = useState<Subject[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
+  const cumulativeGpa = 3.92;
+
   const handleViewResults = () => {
     let filtered = ALL_SUBJECTS;
     if (selectedSubject !== "All Subjects") {
@@ -567,6 +571,98 @@ export default function MarksScreen() {
               results.map((item) => (
                 <SubjectCard key={item.id} item={item} />
               ))
+            )}
+
+            {/* ── GPA Summary Card ── */}
+            {results.length > 0 && (
+              <View
+                style={{
+                  borderRadius: 22,
+                  padding: 24,
+                  marginTop: 8,
+                  marginBottom: 16,
+                  backgroundColor: "#8f140e",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 9,
+                    fontWeight: "800",
+                    color: "rgba(255,255,255,0.55)",
+                    letterSpacing: 1.5,
+                    textTransform: "uppercase",
+                    marginBottom: 6,
+                  }}
+                >
+                  Term Performance Overview
+                </Text>
+
+                <Text
+                  style={{
+                    fontSize: 28,
+                    fontWeight: "900",
+                    color: "#fff",
+                    lineHeight: 34,
+                    marginBottom: 14,
+                  }}
+                >
+                  Exceptional{"\n"}Progress
+                </Text>
+
+                <Text
+                  style={{
+                    fontSize: 13,
+                    color: "rgba(255,255,255,0.7)",
+                    lineHeight: 21,
+                    marginBottom: 24,
+                  }}
+                >
+                  The student ranks in the Top 5% of the current cohort.
+                  Consistent performance across analytical subjects shows high
+                  aptitude for research-based electives next semester.
+                </Text>
+
+                <View
+                  style={{
+                    height: 0.5,
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    marginBottom: 24,
+                  }}
+                />
+
+                <Text
+                  style={{
+                    fontSize: 9,
+                    fontWeight: "800",
+                    color: "rgba(255,255,255,0.55)",
+                    letterSpacing: 1.5,
+                    textTransform: "uppercase",
+                    marginBottom: 6,
+                  }}
+                >
+                  Cumulative GPA
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 60,
+                    fontWeight: "900",
+                    color: "#fff",
+                    lineHeight: 64,
+                  }}
+                >
+                  {cumulativeGpa.toFixed(2)}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: "rgba(255,255,255,0.55)",
+                    marginTop: 6,
+                    fontWeight: "600",
+                  }}
+                >
+                  GPA 4.0 Scale
+                </Text>
+              </View>
             )}
           </View>
         )}
