@@ -637,7 +637,7 @@ export default function MarksScreen() {
                     marginBottom: 6,
                   }}
                 >
-                  Cumulative GPA
+                  Average
                 </Text>
                 <Text
                   style={{
@@ -657,7 +657,7 @@ export default function MarksScreen() {
                     fontWeight: "600",
                   }}
                 >
-                  GPA 4.0 Scale
+                  Average Scale
                 </Text>
               </View>
             )}
