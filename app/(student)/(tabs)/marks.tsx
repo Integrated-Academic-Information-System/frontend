@@ -1,3 +1,10 @@
+// app/(student)/(tabs)/marks.tsx
+
+import { Feather, Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { Pressable, ScrollView, StatusBar, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type Subject = {
@@ -60,12 +67,87 @@ const SUBJECT_OPTIONS = [
 ];
 
 const TERM_OPTIONS = [
-  "Fall 2024",
-  "Spring 2024",
-  "Fall 2023",
-  "Spring 2023",
+  "1st Term",
+  "2nd Term",
+  "3rd Term",
 ];
 
+// ─── Screen ───────────────────────────────────────────────────────────────────
+
 export default function MarksScreen() {
-  return null;
+  const router = useRouter();
+
+  return (
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#efeae4" }}
+      edges={["top"]}
+    >
+      <StatusBar barStyle="dark-content" />
+
+      <ScrollView
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* ── Top Bar ── */}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: 16,
+            paddingTop: 8,
+            paddingBottom: 16,
+          }}
+        >
+          <Pressable
+            onPress={() => router.back()}
+            style={({ pressed }) => ({
+              width: 36,
+              height: 36,
+              borderRadius: 18,
+              backgroundColor: "#e7e4e0",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: pressed ? 0.7 : 1,
+            })}
+          >
+            <Feather name="arrow-left" size={18} color="#2d2d2d" />
+          </Pressable>
+          <View
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 18,
+              backgroundColor: "#e7e4e0",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Ionicons name="person-outline" size={18} color="#8f140e" />
+          </View>
+        </View>
+
+        {/* ── Page Title ── */}
+        <View style={{ paddingHorizontal: 16, marginBottom: 24 }}>
+          <Text
+            style={{
+              fontSize: 9,
+              fontWeight: "800",
+              color: "#8f140e",
+              letterSpacing: 1.5,
+              textTransform: "uppercase",
+              marginBottom: 4,
+            }}
+          >
+            Student Progress
+          </Text>
+          <Text style={{ fontSize: 30, fontWeight: "900", color: "#1a1a1a" }}>
+            Marks View
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
