@@ -1,3 +1,4 @@
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
@@ -118,6 +119,7 @@ const NotificationCard = ({
 );
 
 export default function NotificationsScreen() {
+  useAuthGuard();
   const [notifications, setNotifications] = useState<Notification[]>(
     INITIAL_NOTIFICATIONS
   );

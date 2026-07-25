@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
+  ActivityIndicator,
   Pressable,
   ScrollView,
   StatusBar,
@@ -10,6 +11,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { useStudentDashboard } from "@/hooks/useStudentDashboard";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -22,26 +25,7 @@ type QuickAction = {
   route: string;
 };
 
-type PerformanceItem = {
-  id: string;
-  subject: string;
-  course: string;
-  score: number;
-  total: number;
-  color: string;
-  bgColor: string;
-  symbol: string;
-};
-
-type NotificationItem = {
-  id: string;
-  title: string;
-  body: string;
-  time: string;
-  read: boolean;
-};
-
-// ─── Static Data ─────────────────────────────────────────────────────────────
+// ─── Static Data (navigation only — no backend needed) ──────────────────────
 
 const QUICK_ACTIONS: QuickAction[] = [
   {
@@ -70,56 +54,6 @@ const QUICK_ACTIONS: QuickAction[] = [
   },
 ];
 
-const PERFORMANCE: PerformanceItem[] = [
-  {
-    id: "math",
-    subject: "Mathematics",
-    course: "Advanced Calculus II",
-    score: 95,
-    total: 100,
-    color: "#1a73e8",
-    bgColor: "#e8f0fe",
-    symbol: "Σ",
-  },
-  {
-    id: "chem",
-    subject: "Chemistry",
-    course: "Organic Chemistry Lab",
-    score: 91,
-    total: 100,
-    color: "#d93025",
-    bgColor: "#fce8e6",
-    symbol: "⚗",
-  },
-  {
-    id: "phys",
-    subject: "Physics",
-    course: "Quantum Mechanics",
-    score: 88,
-    total: 100,
-    color: "#f9ab00",
-    bgColor: "#fef7e0",
-    symbol: "⚡",
-  },
-];
-
-const NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: "1",
-    title: "Physics Quiz Results",
-    body: 'Your results for "Weekly Quiz 08: Particle Physics" are now available. You scored higher than 83% of your peers.',
-    time: "3h ago",
-    read: false,
-  },
-  {
-    id: "2",
-    title: "School Holiday",
-    body: "Please note that the campus will be closed next Friday for the Annual Faculty Symposium. No lectures scheduled.",
-    time: "Yesterday",
-    read: true,
-  },
-];
-
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const ActionIcon = ({
@@ -137,8 +71,12 @@ const ActionIcon = ({
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
+  
+  useAuthGuard();
+
   const router = useRouter();
   const [userName, setUserName] = useState("Student");
+  const { data, loading, error, refetch } = useStudentDashboard();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -148,16 +86,36 @@ export default function DashboardScreen() {
     loadUser();
   }, []);
 
-  const handleLogout = async () => {
-    await AsyncStorage.multiRemove(["authToken", "userName", "teacherStatus"]);
-    router.replace("/");
-  };
-
   const initials = userName
     .split(/[\s._-]/)
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
+
+  // ── Loading state ──
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#efeae4] justify-center items-center">
+        <ActivityIndicator size="large" color="#8f140e" />
+        <Text className="text-[#9c8b84] mt-3 text-sm">Loading dashboard...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  // ── Error state ──
+  if (error || !data) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#efeae4] justify-center items-center px-6">
+        <Text className="text-[#8f140e] font-bold text-base mb-2">
+          Failed to load dashboard
+        </Text>
+        <Text className="text-[#9c8b84] text-sm text-center mb-4">{error}</Text>
+        <Pressable onPress={refetch} className="bg-[#8f140e] px-5 py-2.5 rounded-xl">
+          <Text className="text-white font-bold text-sm">Try Again</Text>
+        </Pressable>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]" edges={["top"]}>
@@ -185,26 +143,15 @@ export default function DashboardScreen() {
               </Text>
             </View>
           </View>
-          <Pressable
-            onPress={handleLogout}
-            className="bg-[#fdf0f0] px-4 py-2 rounded-full"
-          >
-            <Text style={{ fontSize: 12, fontWeight: "700", color: "#8f140e" }}>
-              Logout
-            </Text>
-          </Pressable>
         </View>
 
         {/* ── Hero Academic Standing Card ── */}
-        <View
-          className="mx-4 mb-4 rounded-[22px] p-5"
-          style={{ backgroundColor: "#8f140e" }}
-        >
+        <View className="mx-4 mb-4 rounded-[22px] p-5" style={{ backgroundColor: "#8f140e" }}>
           <Text style={{ fontSize: 9, fontWeight: "800", color: "rgba(255,255,255,0.55)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 }}>
             Academic Standing
           </Text>
           <Text style={{ fontSize: 48, fontWeight: "900", color: "#fff", lineHeight: 52 }}>
-            92.4%
+            {data.academic_standing}%
           </Text>
           <View className="flex-row gap-5 mt-4">
             <View>
@@ -212,7 +159,7 @@ export default function DashboardScreen() {
                 Class Rank
               </Text>
               <Text style={{ fontSize: 14, fontWeight: "800", color: "#fff", marginTop: 2 }}>
-                #04
+                {data.class_rank ?? "—"}
               </Text>
             </View>
             <View>
@@ -220,11 +167,12 @@ export default function DashboardScreen() {
                 Standing
               </Text>
               <Text style={{ fontSize: 14, fontWeight: "800", color: "#fff", marginTop: 2 }}>
-                Top 5% of your class
+                {data.standing_label ?? "No marks recorded yet"}
               </Text>
             </View>
           </View>
           <Pressable
+            onPress={() => router.push("/(student)/(tabs)/marks" as any)}
             className="mt-4 bg-white rounded-full py-3 items-center"
             style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
           >
@@ -251,10 +199,7 @@ export default function DashboardScreen() {
                 borderColor: "#f0ebe6",
               })}
             >
-              <View
-                className="w-10 h-10 rounded-full items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: "#fdf0f0" }}
-              >
+              <View className="w-10 h-10 rounded-full items-center justify-center flex-shrink-0" style={{ backgroundColor: "#fdf0f0" }}>
                 <ActionIcon icon={action.icon} iconLib={action.iconLib} focused />
               </View>
               <View className="flex-1">
@@ -276,87 +221,113 @@ export default function DashboardScreen() {
             <Text style={{ fontSize: 18, fontWeight: "900", color: "#1a1a1a" }}>
               Recent Performance
             </Text>
-            <Pressable>
+            <Pressable onPress={() => router.push("/(student)/(tabs)/marks" as any)}>
               <Text style={{ fontSize: 11, fontWeight: "800", color: "#8f140e" }}>
                 Full Analytics
               </Text>
             </Pressable>
           </View>
 
-          {PERFORMANCE.map((item) => (
-            <View
-              key={item.id}
-              className="bg-white rounded-2xl px-4 py-3 mb-2 flex-row items-center gap-3"
-              style={{ borderWidth: 0.5, borderColor: "#f0ebe6" }}
-            >
-              <View
-                className="w-9 h-9 rounded-full items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: item.bgColor }}
+          {data.recent_performance.length === 0 ? (
+            <Text className="text-[#9c8b84] text-sm px-1">
+              No marks recorded yet for this term.
+            </Text>
+          ) : (
+            data.recent_performance.map((item, idx) => (
+              <Pressable
+                key={`${item.subject_code}-${idx}`}
+                onPress={() => router.push("/(student)/(tabs)/marks" as any)}
+                className="bg-white rounded-2xl px-4 py-3 mb-2 flex-row items-center gap-3"
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.8 : 1,
+                  borderWidth: 0.5,
+                  borderColor: "#f0ebe6",
+                })}
               >
-                <Text style={{ fontSize: 14, fontWeight: "800", color: item.color }}>
-                  {item.symbol}
+                <View className="w-9 h-9 rounded-full items-center justify-center flex-shrink-0" style={{ backgroundColor: "#e8f0fe" }}>
+                  <Text style={{ fontSize: 14, fontWeight: "800", color: "#1a73e8" }}>
+                    {item.subject.charAt(0)}
+                  </Text>
+                </View>
+                <View className="flex-1">
+                  <Text style={{ fontSize: 13, fontWeight: "800", color: "#1a1a1a" }}>
+                    {item.subject}
+                  </Text>
+                  <Text style={{ fontSize: 10, color: "#9c8b84", marginTop: 1 }}>
+                    {item.subject_code}
+                  </Text>
+                </View>
+                <Text style={{ fontSize: 16, fontWeight: "900", color: "#1a1a1a" }}>
+                  {item.score}
+                  <Text style={{ fontSize: 10, color: "#9c8b84", fontWeight: "600" }}>
+                    /100
+                  </Text>
                 </Text>
-              </View>
-              <View className="flex-1">
-                <Text style={{ fontSize: 13, fontWeight: "800", color: "#1a1a1a" }}>
-                  {item.subject}
-                </Text>
-                <Text style={{ fontSize: 10, color: "#9c8b84", marginTop: 1 }}>
-                  {item.course}
-                </Text>
-              </View>
-              <Text style={{ fontSize: 16, fontWeight: "900", color: "#1a1a1a" }}>
-                {item.score}
-                <Text style={{ fontSize: 10, color: "#9c8b84", fontWeight: "600" }}>
-                  /{item.total}
-                </Text>
-              </Text>
-            </View>
-          ))}
+              </Pressable>
+            ))
+          )}
         </View>
 
         {/* ── Latest Notifications ── */}
         <View className="px-4 mt-3">
-          <Text style={{ fontSize: 18, fontWeight: "900", color: "#1a1a1a", marginBottom: 12 }}>
-            Latest Notifications
-          </Text>
+          <View className="flex-row justify-between items-center mb-3">
+            <Text style={{ fontSize: 18, fontWeight: "900", color: "#1a1a1a" }}>
+              Latest Notifications
+            </Text>
+            <Pressable onPress={() => router.push("/(student)/(tabs)/notifications" as any)}>
+              <Text style={{ fontSize: 11, fontWeight: "800", color: "#8f140e" }}>
+                View All
+              </Text>
+            </Pressable>
+          </View>
 
-          {NOTIFICATIONS.map((notif) => (
-            <View
-              key={notif.id}
-              className="bg-white rounded-2xl p-4 mb-2.5"
-              style={{ borderWidth: 0.5, borderColor: "#f0ebe6" }}
-            >
-              <View className="flex-row items-start justify-between mb-1">
-                <View className="flex-row items-center gap-2 flex-1">
-                  <View
-                    className="w-2 h-2 rounded-full flex-shrink-0 mt-0.5"
-                    style={{
-                      backgroundColor: notif.read ? "transparent" : "#8f140e",
-                      borderWidth: notif.read ? 1.5 : 0,
-                      borderColor: "#c0b4af",
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      fontWeight: "800",
-                      color: notif.read ? "#1a1a1a" : "#8f140e",
-                      flex: 1,
-                    }}
-                  >
-                    {notif.title}
+          {data.notifications.length === 0 ? (
+            <Text className="text-[#9c8b84] text-sm px-1">
+              No notifications yet.
+            </Text>
+          ) : (
+            data.notifications.map((notif) => (
+              <Pressable
+                key={notif.id}
+                onPress={() => router.push("/(student)/(tabs)/notifications" as any)}
+                className="bg-white rounded-2xl p-4 mb-2.5"
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.85 : 1,
+                  borderWidth: 0.5,
+                  borderColor: "#f0ebe6",
+                })}
+              >
+                <View className="flex-row items-start justify-between mb-1">
+                  <View className="flex-row items-center gap-2 flex-1">
+                    <View
+                      className="w-2 h-2 rounded-full flex-shrink-0 mt-0.5"
+                      style={{
+                        backgroundColor: notif.read ? "transparent" : "#8f140e",
+                        borderWidth: notif.read ? 1.5 : 0,
+                        borderColor: "#c0b4af",
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: "800",
+                        color: notif.read ? "#1a1a1a" : "#8f140e",
+                        flex: 1,
+                      }}
+                    >
+                      {notif.title}
+                    </Text>
+                  </View>
+                  <Text style={{ fontSize: 10, color: "#a5928a", marginLeft: 8 }}>
+                    {notif.created_at}
                   </Text>
                 </View>
-                <Text style={{ fontSize: 10, color: "#a5928a", marginLeft: 8 }}>
-                  {notif.time}
+                <Text style={{ fontSize: 11, color: "#6f5f5a", lineHeight: 17, paddingLeft: 16 }}>
+                  {notif.body}
                 </Text>
-              </View>
-              <Text style={{ fontSize: 11, color: "#6f5f5a", lineHeight: 17, paddingLeft: 16 }}>
-                {notif.body}
-              </Text>
-            </View>
-          ))}
+              </Pressable>
+            ))
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

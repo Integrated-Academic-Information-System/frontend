@@ -1,18 +1,18 @@
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  View,
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StatusBar,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -23,6 +23,11 @@ export default function Index() {
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState<"English" | "Sinhala">("English");
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    setCheckingAuth(false);
+  }, []);
 
   const handleClearForm = () => {
     setUsername("");
@@ -50,6 +55,7 @@ export default function Index() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           //Make as a json
@@ -62,29 +68,59 @@ export default function Index() {
 
       // If login failed
       if (!response.ok) {
-        Alert.alert("Login Failed", data.message);
+        Alert.alert("Login Failed", "Invalid user name or password!");
         return;
       }
 
       // Save real token from backend
       await AsyncStorage.setItem("authToken", data.token);
-      await AsyncStorage.setItem("userName", data.user_name);
-      await AsyncStorage.setItem("teacherStatus", String(data.teacher_status));
 
-      const userName = await AsyncStorage.getItem("userName");
-      const teacherStatus = await AsyncStorage.getItem("teacherStatus");
+      const teacherId = data.teacher_id;
+      const teacherStatus =
+        data.teacher_status !== undefined && data.teacher_status !== null
+          ? String(data.teacher_status)
+          : "";
+      const userName = data.user_name ?? "";
+      const isTeacher = teacherId !== undefined && teacherId !== null;
+      const isAdmin = userName.toLowerCase().includes("admin");
+      const isStudent = userName.toLowerCase().includes("reg");
 
-      if (userName?.toLowerCase().includes("admin")) {
+      if (isTeacher) {
+        // Teacher-specific keys
+        await AsyncStorage.multiSet([
+          ["teacher_name", data.name ?? ""],
+          ["teacher_username", data.user_name ?? ""],
+          ["teacher_email", data.email ?? ""],
+          ["teacher_mobile", data.mobile_number ?? ""],
+          ["teacher_status", teacherStatus],
+          ["teacherStatus", teacherStatus],
+          ["teacher_id", String(teacherId)],
+          ["teacherId", String(teacherId)],
+          ["userRole", "teacher"],
+        ]);
+      } else if (isStudent) {
+        // Student-specific keys
+        await AsyncStorage.multiSet([
+          ["userName", data.user_name ?? ""],
+          ["userRole", "student"],
+        ]);
+      } else if (isAdmin) {
+        await AsyncStorage.setItem("userRole", "admin");
+      }
+
+      if (isAdmin) {
         router.replace("/(admin)/(tabs)/dashboard");
-      }else if (userName?.toLowerCase().includes("reg")) {
+      } else if (isStudent) {
         router.replace("/(student)/(tabs)/dashboard");
-      }else if (userName?.toLowerCase().includes("teacher")) {
-        if(teacherStatus === "0"){
+      } else if (isTeacher) {
+        if (teacherStatus === "0") {
           router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
-        }else if(teacherStatus === "1"){
+        } else if (teacherStatus === "1") {
           router.replace("/(teacher)/(tabs)/class-incharge/dashboard");
+        } else {
+          Alert.alert("Invalid Teacher Role");
         }
-      }else{
+      } else {
         Alert.alert("You can not login!");
         return;
       }
@@ -98,6 +134,14 @@ export default function Index() {
       );
     }
   };
+
+  if (checkingAuth) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
+        <StatusBar barStyle="dark-content" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#efeae4]">

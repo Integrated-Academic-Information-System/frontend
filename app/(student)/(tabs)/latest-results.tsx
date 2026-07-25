@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 // Mock Data for subjects matching the layout
 const SUBJECTS_DATA = [
@@ -46,6 +47,9 @@ const SUBJECTS_DATA = [
 ];
 
 export default function ResultsDashboard() {
+
+  useAuthGuard();
+
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
