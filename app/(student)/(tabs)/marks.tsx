@@ -72,6 +72,141 @@ const TERM_OPTIONS = [
   "Spring 2023",
 ];
 
+// ─── Grade Color Helper ───────────────────────────────────────────────────────
+
+const gradeColor = (grade: string): string => {
+  if (grade.startsWith("A")) return "#1a73e8";
+  if (grade.startsWith("B")) return "#0f9d58";
+  if (grade.startsWith("C")) return "#f9ab00";
+  return "#d93025";
+};
+
+// ─── Subject Card Component ───────────────────────────────────────────────────
+
+const SubjectCard = ({ item }: { item: Subject }) => (
+  <View
+    style={{
+      backgroundColor: "#fff",
+      borderRadius: 16,
+      padding: 16,
+      marginBottom: 12,
+      borderWidth: 0.5,
+      borderColor: "#f0ebe6",
+    }}
+  >
+    <Text
+      style={{
+        fontSize: 9,
+        fontWeight: "800",
+        color: "#a5928a",
+        letterSpacing: 1,
+        textTransform: "uppercase",
+        marginBottom: 6,
+      }}
+    >
+      {item.department}
+    </Text>
+
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "900",
+          color: "#1a1a1a",
+          flex: 1,
+          lineHeight: 26,
+          paddingRight: 12,
+        }}
+      >
+        {item.name}
+      </Text>
+      <Text
+        style={{
+          fontSize: 22,
+          fontWeight: "900",
+          color: gradeColor(item.grade),
+        }}
+      >
+        {item.grade}
+      </Text>
+    </View>
+
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 12,
+      }}
+    >
+      <View>
+        <Text
+          style={{
+            fontSize: 9,
+            fontWeight: "800",
+            color: "#a5928a",
+            letterSpacing: 1,
+            textTransform: "uppercase",
+          }}
+        >
+          Term
+        </Text>
+        <Text
+          style={{
+            fontSize: 13,
+            fontWeight: "700",
+            color: "#2d2d2d",
+            marginTop: 2,
+          }}
+        >
+          {item.term}
+        </Text>
+      </View>
+      <View style={{ alignItems: "flex-end" }}>
+        <Text
+          style={{
+            fontSize: 9,
+            fontWeight: "800",
+            color: "#a5928a",
+            letterSpacing: 1,
+            textTransform: "uppercase",
+          }}
+        >
+          Score
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "baseline",
+            gap: 2,
+            marginTop: 2,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 26,
+              fontWeight: "900",
+              color: "#1a1a1a",
+              lineHeight: 28,
+            }}
+          >
+            {item.score}
+          </Text>
+          <Text style={{ fontSize: 12, color: "#a5928a", fontWeight: "600" }}>
+            / {item.total}
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+);
+
 // ─── Dropdown Component ───────────────────────────────────────────────────────
 
 const Dropdown = ({
@@ -324,7 +459,6 @@ export default function MarksScreen() {
             }}
           />
 
-          {/* ── Action Buttons ── */}
           <View style={{ flexDirection: "row", gap: 12, marginTop: 4 }}>
             <Pressable
               onPress={handleBack}
@@ -365,6 +499,77 @@ export default function MarksScreen() {
             </Pressable>
           </View>
         </View>
+
+        {/* ── Results Section ── */}
+        {hasSearched && (
+          <View style={{ paddingHorizontal: 16 }}>
+
+            {/* Results header */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <Text
+                style={{ fontSize: 22, fontWeight: "900", color: "#1a1a1a" }}
+              >
+                Subject{"\n"}Performance
+              </Text>
+              <View style={{ alignItems: "flex-end" }}>
+                <Text
+                  style={{ fontSize: 12, fontWeight: "700", color: "#8f140e" }}
+                >
+                  {results.length} records
+                </Text>
+                <Text style={{ fontSize: 11, color: "#a5928a" }}>found</Text>
+              </View>
+            </View>
+
+            {/* Empty state */}
+            {results.length === 0 ? (
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: 16,
+                  padding: 32,
+                  alignItems: "center",
+                  marginBottom: 16,
+                  borderWidth: 0.5,
+                  borderColor: "#f0ebe6",
+                }}
+              >
+                <Ionicons name="search-outline" size={40} color="#c0b4af" />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: "#a5928a",
+                    marginTop: 12,
+                    fontWeight: "600",
+                  }}
+                >
+                  No results found
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "#c0b4af",
+                    marginTop: 4,
+                    textAlign: "center",
+                  }}
+                >
+                  Try adjusting your filters.
+                </Text>
+              </View>
+            ) : (
+              results.map((item) => (
+                <SubjectCard key={item.id} item={item} />
+              ))
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
