@@ -1,18 +1,36 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  DashboardStats,
+  getDashboardStats,
+} from "../../../src/lib/adminUsers";
 
 export default function DashboardScreen() {
-  const [activeFilter, setActiveFilter] = useState<
-    "all" | "critical" | "warning" | "info"
-  >("all");
-
   const router = useRouter();
 
-  const totalStudents = 1284;
-  const totalSubjects = 42;
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchStats = async () => {
+      try {
+        const data = await getDashboardStats();
+        if (!cancelled) setStats(data);
+      } catch {
+        // Silently fall back to null – UI handles missing data gracefully
+      } finally {
+        if (!cancelled) setStatsLoading(false);
+      }
+    };
+    fetchStats();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleMarksEntry = () => {
     router.push("/(admin)/(tabs)/marks-entry");
@@ -21,6 +39,34 @@ export default function DashboardScreen() {
   const handleUserManagement = () => {
     router.push("/(admin)/(tabs)/students");
   };
+
+  const StatCard = ({
+    label,
+    value,
+    icon,
+  }: {
+    label: string;
+    value: number | undefined;
+    icon: string;
+  }) => (
+    <View className="flex-row items-start justify-between rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm">
+      <View>
+        <Text className="mb-1 text-xs font-bold uppercase tracking-wider text-zinc-400">
+          {label}
+        </Text>
+        {statsLoading ? (
+          <ActivityIndicator size="small" color="#8f140e" />
+        ) : (
+          <Text className="text-3xl font-black text-[#8f140e]">
+            {(value ?? 0).toLocaleString()}
+          </Text>
+        )}
+      </View>
+      <View className="rounded-xl bg-[#8f140e]/10 p-3">
+        <FontAwesome5 name={icon as any} size={18} color="#8f140e" />
+      </View>
+    </View>
+  );
 
   return (
     <SafeAreaView
@@ -55,34 +101,11 @@ export default function DashboardScreen() {
             </Pressable>
           </View>
 
-          <View className="mb-6 gap-4">
-            <View className="flex-row items-start justify-between rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm">
-              <View>
-                <Text className="mb-1 text-xs font-bold uppercase tracking-wider text-zinc-400">
-                  Students
-                </Text>
-                <Text className="text-3xl font-black text-[#8f140e]">
-                  {totalStudents.toLocaleString()}
-                </Text>
-              </View>
-              <View className="rounded-xl bg-[#8f140e]/10 p-3">
-                <FontAwesome5 name="users" size={18} color="#8f140e" />
-              </View>
-            </View>
-
-            <View className="flex-row items-start justify-between rounded-3xl border border-zinc-100 bg-white p-5 shadow-sm">
-              <View>
-                <Text className="mb-1 text-xs font-bold uppercase tracking-wider text-zinc-400">
-                  Subjects
-                </Text>
-                <Text className="text-3xl font-black text-[#8f140e]">
-                  {totalSubjects}
-                </Text>
-              </View>
-              <View className="rounded-xl bg-[#8f140e]/10 p-3">
-                <FontAwesome5 name="book-open" size={18} color="#8f140e" />
-              </View>
-            </View>
+          <View className="mb-6 gap-4 mt-6">
+            <StatCard label="Total Users" value={stats?.users} icon="users" />
+            <StatCard label="Students" value={stats?.students} icon="user-graduate" />
+            <StatCard label="Teachers" value={stats?.teachers} icon="chalkboard-teacher" />
+            <StatCard label="Subjects" value={stats?.subjects} icon="book-open" />
           </View>
 
           <View className="mb-6 w-full gap-3.5">

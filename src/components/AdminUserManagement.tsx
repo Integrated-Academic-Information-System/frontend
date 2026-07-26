@@ -30,12 +30,7 @@ import {
   updateAdminTeacher,
 } from "../lib/adminUsers";
 
-type FilterKey =
-  | "all"
-  | "student"
-  | "teacher"
-  | "class_teacher"
-  | "subject_teacher";
+type FilterKey = "all" | "student" | "teacher";
 
 type ModalMode =
   | "create-student"
@@ -47,8 +42,6 @@ const FILTERS: { key: FilterKey; label: string }[] = [
   { key: "all", label: "All" },
   { key: "student", label: "Students" },
   { key: "teacher", label: "Teachers" },
-  { key: "class_teacher", label: "Class Teachers" },
-  { key: "subject_teacher", label: "Subject Teachers" },
 ];
 
 function safeArray<T>(value: T[] | undefined | null) {
@@ -141,8 +134,6 @@ export default function AdminUserManagement() {
         if (filterKey === "all") return true;
         if (filterKey === "student") return isStudent;
         if (filterKey === "teacher") return isTeacher;
-        if (filterKey === "class_teacher") return teacherFlags.classTeacher;
-        if (filterKey === "subject_teacher") return teacherFlags.subjectTeacher;
         return true;
       })();
 
@@ -240,7 +231,7 @@ export default function AdminUserManagement() {
           style: "destructive",
           onPress: async () => {
             try {
-              await deleteAdminUser(user.id);
+              await deleteAdminUser(user.id, user.role);
               setUsers((currentUsers) =>
                 currentUsers.filter((item) => item.id !== user.id),
               );

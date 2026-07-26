@@ -26,7 +26,74 @@ export default function Index() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    setCheckingAuth(false);
+    const checkExistingAuth = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+
+        if (!token) {
+          setCheckingAuth(false);
+          return;
+        }
+
+        // Validate the stored token against the backend
+        const response = await fetch(
+          process.env.EXPO_PUBLIC_API_URL + "/auth/me",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          // Token is expired or invalid — clear stored credentials and show login
+          await AsyncStorage.multiRemove([
+            "authToken",
+            "userRole",
+            "userName",
+            "teacher_name",
+            "teacher_username",
+            "teacher_email",
+            "teacher_mobile",
+            "teacher_status",
+            "teacherStatus",
+            "teacher_id",
+            "teacherId",
+          ]);
+          setCheckingAuth(false);
+          return;
+        }
+
+        const data = await response.json();
+        const storedRole = await AsyncStorage.getItem("userRole");
+        const role = data.role ?? storedRole ?? "";
+
+        // Redirect to the correct dashboard based on the validated role
+        if (role === "admin") {
+          router.replace("/(admin)/(tabs)/dashboard");
+        } else if (role === "student") {
+          router.replace("/(student)/(tabs)/dashboard");
+        } else if (role === "teacher") {
+          const teacherStatus = String(data.teacher_status ?? "");
+          if (teacherStatus === "0") {
+            router.replace("/(teacher)/(tabs)/subject-teacher/dashboard");
+          } else if (teacherStatus === "1") {
+            router.replace("/(teacher)/(tabs)/class-incharge/dashboard");
+          } else {
+            setCheckingAuth(false);
+          }
+        } else {
+          setCheckingAuth(false);
+        }
+      } catch {
+        // Network error or unexpected failure — fall through to login screen
+        setCheckingAuth(false);
+      }
+    };
+
+    checkExistingAuth();
   }, []);
 
   const handleClearForm = () => {

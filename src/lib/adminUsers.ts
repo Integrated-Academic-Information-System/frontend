@@ -343,7 +343,27 @@ export async function updateAdminTeacher(
   });
 }
 
-export async function deleteAdminUser(userId: string) {
+export async function deleteAdminStudent(userId: string) {
+  return requestAdmin(`/admin/students/${encodeURIComponent(userId)}`, {
+    method: "DELETE",
+  });
+}
+
+export async function deleteAdminTeacher(userId: string) {
+  return requestAdmin(`/admin/teachers/${encodeURIComponent(userId)}`, {
+    method: "DELETE",
+  });
+}
+
+export async function deleteAdminUser(userId: string, role?: string) {
+  const normalizedRole = (role ?? "").toLowerCase();
+  if (normalizedRole.includes("student")) {
+    return deleteAdminStudent(userId);
+  }
+  if (normalizedRole.includes("teacher")) {
+    return deleteAdminTeacher(userId);
+  }
+  // Fallback to generic endpoint
   return requestAdmin(`/admin/users/${encodeURIComponent(userId)}`, {
     method: "DELETE",
   });
@@ -389,4 +409,23 @@ export async function exportMarksReport(params: Record<string, string>) {
   }
 
   return response;
+}
+
+export interface DashboardStats {
+  students: number;
+  subjects: number;
+  teachers: number;
+  users: number;
+}
+
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const payload = await requestAdmin("/admin/dashboard/stats");
+  // Normalize various possible response shapes
+  const data = payload?.data ?? payload;
+  return {
+    students: Number(data?.students ?? data?.student_count ?? data?.total_students ?? 0),
+    subjects: Number(data?.subjects ?? data?.subject_count ?? data?.total_subjects ?? 0),
+    teachers: Number(data?.teachers ?? data?.teacher_count ?? data?.total_teachers ?? 0),
+    users: Number(data?.users ?? data?.user_count ?? data?.total_users ?? 0),
+  };
 }
