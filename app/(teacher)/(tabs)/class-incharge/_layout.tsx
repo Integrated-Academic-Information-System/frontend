@@ -78,8 +78,6 @@ export default function TeacherTabsLayout() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem("authToken");
-      // const userName = await AsyncStorage.getItem("userName");
-
       const isAuthenticated = !!token;
 
       if (!isAuthenticated) {
@@ -108,8 +106,18 @@ export default function TeacherTabsLayout() {
     } catch (e) {
       console.log("Logout request failed:", e);
     } finally {
-      await AsyncStorage.multiRemove(["authToken", "userName"]);
-      if (typeof window !== "undefined") {
+      await AsyncStorage.multiRemove([
+        "authToken",
+        "userName",
+        "teacher_name",
+        "teacher_username",
+        "teacher_email",
+        "teacher_mobile",
+        "teacher_status",
+        "teacher_id",
+        "userRole",
+      ]);
+      if (Platform.OS === "web") {
         window.location.href = "/";
       } else {
         router.replace("/");
