@@ -1,10 +1,17 @@
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { ModernEmptyState } from "../../../src/components/ModernEmptyState";
 
 export default function NotificationsScreen() {
+  const router = useRouter();
+
   return (
-    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
-      <Text className="text-2xl font-bold text-[#8f140e]">Notifications</Text>
-    </SafeAreaView>
+    <ModernEmptyState
+      badge="Student updates"
+      iconName="bell"
+      title="You're all caught up"
+      description="Exam reminders, result updates, and school notices will appear here in a cleaner, easier-to-scan layout."
+      actionLabel="Open Latest Results"
+      onActionPress={() => router.push("/(student)/(tabs)/latest-results")}
+    />
   );
 }

@@ -1,10 +1,12 @@
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ModernEmptyState } from "../../../../src/components/ModernEmptyState";
 
 export default function AlertsScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-[#efeae4] items-center justify-center">
-      <Text className="text-2xl font-bold text-[#8f140e]">Alerts</Text>
-    </SafeAreaView>
+    <ModernEmptyState
+      badge="Subject alerts"
+      iconName="alert-triangle"
+      title="No subject alerts yet"
+      description="Lesson notes, task reminders, and class-specific notices will show up here when they arrive."
+    />
   );
 }
