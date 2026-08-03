@@ -3,14 +3,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    Modal,
-    Platform,
-    Pressable,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Image,
+  Modal,
+  Platform,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 // Reusable component for Tab Icons
@@ -118,8 +118,8 @@ export default function AdminTabsLayout() {
     } catch (e) {
       console.log("Logout request failed:", e);
     } finally {
-      await AsyncStorage.multiRemove(["authToken", "userName"]);
-      if (typeof window !== "undefined") {
+      await AsyncStorage.multiRemove(["authToken", "userName", "userRole"]);
+      if (Platform.OS === "web") {
         window.location.href = "/";
       } else {
         router.replace("/");
