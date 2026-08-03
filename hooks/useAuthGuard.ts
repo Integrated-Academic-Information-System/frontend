@@ -3,6 +3,18 @@ import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const AUTH_STORAGE_KEYS = [
+  "authToken",
+  "userName",
+  "teacher_name",
+  "teacher_username",
+  "teacher_email",
+  "teacher_mobile",
+  "teacher_status",
+  "teacher_id",
+  "userRole",
+];
+
 export const useAuthGuard = (requiredStatus?: string) => {
   const [teacherId, setTeacherId] = useState<string | null>(null);
 
@@ -16,13 +28,8 @@ export const useAuthGuard = (requiredStatus?: string) => {
         const userName = await AsyncStorage.getItem("userName");
 
         const logoutAndRedirect = async () => {
-          await AsyncStorage.multiRemove([
-            "authToken",
-            "userName",
-            "teacher_status",
-            "teacherId",
-            "userRole",
-          ]);
+          console.log("[useAuthGuard] logoutAndRedirect fired");
+          await AsyncStorage.multiRemove(AUTH_STORAGE_KEYS);
           router.replace("/");
         };
 
