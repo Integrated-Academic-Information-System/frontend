@@ -104,8 +104,8 @@ export default function StudentTabsLayout() {
     } catch (e) {
       console.log("Logout request failed:", e);
     } finally {
-      await AsyncStorage.multiRemove(["authToken", "userName"]);
-      if (typeof window !== "undefined") {
+      await AsyncStorage.multiRemove(["authToken", "userName", "userRole"]);
+      if (Platform.OS === "web") {
         window.location.href = "/";
       } else {
         router.replace("/");
